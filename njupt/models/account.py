@@ -64,10 +64,8 @@ class AolanAccount(Model):
             if "辅导员评议" in r.text:
                 self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
                 self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
-                print({'r': 0, 'msg': '登录成功'})
                 return {'r': 0, 'msg': '登录成功'}
             else:
-                print({'r': 1, 'msg': '检查账号密码验证码是否正确'})
                 return {'r': 1, 'msg': '检查账号密码验证码是否正确'}
         else:
             return {'r': 1, "msg": "登录失败"}

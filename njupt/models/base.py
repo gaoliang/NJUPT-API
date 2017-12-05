@@ -5,10 +5,6 @@
 NJUPT-API的抽象基类，任何对象都可以继承
 
 """
-
-import os
-import platform
-import subprocess
 from io import BytesIO
 
 import requests
@@ -18,6 +14,8 @@ from http import cookiejar
 from njupt import settings
 from njupt.urls import URL
 from PIL import Image
+
+from njupt.utils.aolan.aolan_captcha import crack_aolan_captcha
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -48,6 +46,8 @@ class Model(requests.Session):
     def _get_captcha(self, url=URL.jwxt_captcha()):
         r = self.get(url)
         im = Image.open(BytesIO(r.content))
+        if url == URL.aolan_captcha():
+            return crack_aolan_captcha(im)
         im.show()
         captcha = input("输入验证码：")
         return captcha

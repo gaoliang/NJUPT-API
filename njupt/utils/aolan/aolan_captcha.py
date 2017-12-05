@@ -64,7 +64,6 @@ def crack_aolan_captcha(im):
         else:
             table.append(1)
     out = imgry.point(table, '1')
-    out.show()
     v = VectorCompare()
     # 装载训练数据集
     with open(os.path.join(BASE_DIR, 'utils', 'datas', 'imageset.dat'), 'rb+') as f:

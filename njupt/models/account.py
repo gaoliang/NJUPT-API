@@ -24,7 +24,11 @@ class JwxtAccount(Model):
             "hidPdrs": "",
             "hidsc": ""
         }
-        return self._login_execute(url=URL.jwxt_login(), data=data)
+        result = self._login_execute(url=URL.jwxt_login(), data=data)
+        if result['r'] == 2:
+            # 如果验证码错误，尝试递归重复登录
+            return self.login(account, password)
+        return result
 
     def _login_execute(self, url=None, data=None):
         r = self._execute(method="post", url=url, data=data)
@@ -33,8 +37,12 @@ class JwxtAccount(Model):
                 self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
                 self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
                 return {'r': 0, 'msg': '登录成功'}
+            elif "密码错误！！" in r.text:
+                return {'r': 1, 'msg': '密码错误！！'}
+            elif "验证码不正确！！" in r.text:
+                return {'r': 2, 'msg': '验证码不正确！！！'}
             else:
-                return {'r': 1, 'msg': '检查账号密码验证码是否正确'}
+                return {'r': 3, 'msg': '未知错误'}
         else:
             return {'r': 1, "msg": "登录失败"}
 

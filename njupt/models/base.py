@@ -15,7 +15,7 @@ from njupt import settings
 from njupt.urls import URL
 from PIL import Image
 
-from njupt.utils.aolan.aolan_captcha import crack_aolan_captcha
+from njupt.utils import AolanCaptcha, ZhengfangCaptcha
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -47,10 +47,9 @@ class Model(requests.Session):
         r = self.get(url)
         im = Image.open(BytesIO(r.content))
         if url == URL.aolan_captcha():
-            return crack_aolan_captcha(im)
-        im.show()
-        captcha = input("输入验证码：")
-        return captcha
+            return str(AolanCaptcha(im))
+        if url == URL.jwxt_captcha():
+            return str(ZhengfangCaptcha(im))
 
     def _execute(self, method="post", url=None, params=None, json=None, data=None, **kwargs):
         """

@@ -1,12 +1,9 @@
 import os
 import pickle
-
 from PIL import Image
 
+
 # 将图片转换为矢量
-from njupt.settings import BASE_DIR
-
-
 def buildvector(im):
     d1 = {}
     count = 0
@@ -16,19 +13,17 @@ def buildvector(im):
     return d1
 
 
-# 字符集
-iconset = ['2', '3', '4', '5', '6', '7', '8', '9']
+if __name__ == "__main__":
+    # 字符集
+    iconset = ['2', '3', '4', '5', '6', '7', '8', '9']
+    # 将图像数据转为向量数据并保存
+    imageset = []
+    for letter in iconset:
+        for img in os.listdir('captcha_chars/{}/'.format(letter)):
+            temp = []
+            if img != "Thumbs.db" and img != ".DS_Store":
+                temp.append(buildvector(Image.open("captcha_chars/{}/{}".format(letter, img))))
+            imageset.append({letter: temp})
 
-# 训练
-imageset = []
-for letter in iconset:
-    for img in os.listdir(os.path.join(BASE_DIR, 'utils', 'datas', 'sample_set/{}/'.format(letter))):
-        temp = []
-        if img != "Thumbs.db" and img != ".DS_Store":
-            temp.append(
-                buildvector(
-                    Image.open(os.path.join(BASE_DIR, 'utils', 'datas', "sample_set/{}/{}".format(letter, img)))))
-        imageset.append({letter: temp})
-
-with open(os.path.join(BASE_DIR, 'utils', 'datas', 'imageset.dat'), 'wb+') as f:
-    pickle.dump(imageset, f)
+    with open('imageset.dat', 'wb+') as f:
+        pickle.dump(imageset, f)

@@ -32,7 +32,8 @@ class Model(requests.Session):
         self.headers = settings.HEADERS
 
     def _get_viewstate(self, url=None):
-        response = self.get(url or URL.jwxt_login())
+        self.headers['Referer'] = url
+        response = self._execute('get', url)
         soup = BeautifulSoup(response.content, "lxml")
         viewstate = soup.find('input', attrs={"name": "__VIEWSTATE"}).get("value")
         return viewstate

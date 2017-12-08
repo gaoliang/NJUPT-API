@@ -11,6 +11,18 @@ class URL(object):
     lib_host = "http://202.119.228.6:8080"
 
     @classmethod
+    def jwxt_logintest(cls):
+        return cls.jwxt_host + '/content.aspx'
+
+    @classmethod
+    def jwxt_grade(cls, account):
+        return cls.jwxt_host + '/xscj_gc.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121605'.format(account)
+
+    @classmethod
+    def jwxt_class_schedule(cls, account):
+        return cls.jwxt_host + '/xskbcx.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121603'.format(account)
+
+    @classmethod
     def jwxt_captcha(cls):
         # 教务系统验证码
         return cls.jwxt_host + '/CheckCode.aspx'
@@ -38,4 +50,3 @@ class URL(object):
     def lib_captcha(cls):
         # 图书馆验证码
         return cls.lib_host + '/reader/captcha.php'
-

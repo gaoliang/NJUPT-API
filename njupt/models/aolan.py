@@ -1,4 +1,3 @@
-# encoding: utf-8
 import hashlib
 
 from njupt import settings
@@ -6,48 +5,7 @@ from njupt.models.base import Model
 from njupt.urls import URL
 
 
-class JwxtAccount(Model):
-    def login(self, account, password):
-        """
-        登录教务系统 jwxt.njupt.edu.cn
-        :param account: 南邮学号
-        :param password: 密码
-        :return: {'r': 1, "msg": "登录失败"} 或 {'r': 0, 'msg': '登录成功'}
-        """
-        data = {
-            "__VIEWSTATE": self._get_viewstate(),
-            'txtUserName': account,
-            'TextBox2': password,
-            'RadioButtonList1': "%D1%A7%C9%FA",
-            "txtSecretCode": self._get_captcha(URL.jwxt_captcha()),
-            "Button1": "",
-            "hidPdrs": "",
-            "hidsc": ""
-        }
-        result = self._login_execute(url=URL.jwxt_login(), data=data)
-        if result['r'] == 2:
-            # 如果验证码错误，尝试递归重复登录
-            return self.login(account, password)
-        return result
-
-    def _login_execute(self, url=None, data=None):
-        r = self._execute(method="post", url=url, data=data)
-        if r.ok:
-            if "请到信息维护中完善个人联系方式" in r.text:
-                self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
-                self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
-                return {'r': 0, 'msg': '登录成功'}
-            elif "密码错误！！" in r.text:
-                return {'r': 1, 'msg': '密码错误！！'}
-            elif "验证码不正确！！" in r.text:
-                return {'r': 2, 'msg': '验证码不正确！！！'}
-            else:
-                return {'r': 3, 'msg': '未知错误'}
-        else:
-            return {'r': 1, "msg": "登录失败"}
-
-
-class AolanAccount(Model):
+class Aolan(Model):
     def login(self, account, password):
         """
         登录奥兰系统 jwxt.njupt.edu.cn

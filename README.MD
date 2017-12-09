@@ -23,26 +23,43 @@ zhengfang.login('B1xxxxxxx','password')
 >>> zhengfang.get_score() 
     {'gpa': 4.99,
     'coursers': [{
-        'year': '2015-2016',
-        'semester': '1',
-        'code': '00wk00003',
-        'name': '从"愚昧"到"科学"-科学技术简史',
-        'attribute': '任选',
-        'belong': '全校任选课',
-        'credit': '2.0',
-        'point': '',
-        'score': '81',
-        'minorMark': '0',
-        'makeUpScore': '',
-        'retakeScore': '',
-        'college': '网络课程',
-        'note': '',
-        'retakeMark': '0',
-        'englishName': ''
+        'year': '2015-2016', # 学年
+        'semester': '1', # 学期
+        'code': '00wk00003', # 课程代码
+        'name': '从"愚昧"到"科学"-科学技术简史', # 课程名称
+        'attribute': '任选', # 课程性质
+        'belong': '全校任选课', # 课程归属
+        'credit': '2.0', # 学分
+        'point': '', # 绩点
+        'score': '81', # 成绩
+        'minorMark': '0', # 辅修标记
+        'makeUpScore': '', # 辅修标记
+        'retakeScore': '', # 重修成绩 
+        'college': '网络课程', # 开课学院
+        'note': '', # 备注 
+        'retakeMark': '0', # 重修标记
+        'englishName': '' # 英文名称
         }, 
         ]
     }
 ```
+
+##### 获取等级考试信息
+```python
+>>> zhengfang.get_grade() 
+    [
+        {
+        'date': '20151219',
+         'name': '全国大学英语四级考试',
+         'number': '320082152113313',
+         'score': '547',
+         'semester': '1',
+         'year': '2015-2016'
+        },
+        ...
+    ]
+```
+
 ### 奥兰系统
 #### 登录
 ```python

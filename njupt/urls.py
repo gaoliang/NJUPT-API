@@ -15,12 +15,16 @@ class URL(object):
         return cls.jwxt_host + '/content.aspx'
 
     @classmethod
-    def jwxt_grade(cls, account):
+    def jwxt_score(cls, account):
         return cls.jwxt_host + '/xscj_gc.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121605'.format(account)
 
     @classmethod
     def jwxt_class_schedule(cls, account):
         return cls.jwxt_host + '/xskbcx.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121603'.format(account)
+
+    @classmethod
+    def jwxt_grade(cls, account):
+        return cls.jwxt_host + '/xsdjkscx.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121606'.format(account)
 
     @classmethod
     def jwxt_captcha(cls):

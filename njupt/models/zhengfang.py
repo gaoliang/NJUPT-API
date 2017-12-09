@@ -1,4 +1,6 @@
 # encoding: utf-8
+from pprint import pprint
+
 from bs4 import BeautifulSoup
 
 from njupt import settings
@@ -15,6 +17,32 @@ class Zhengfang(Model):
             self.login(account, password)
 
     @zhengfang_logined
+    def get_grade(self):
+        """
+        获取等级考试成绩信息
+        :return: list
+                [
+                    {'date': '20151219',
+                     'name': '全国大学英语四级考试',
+                     'number': '320082152113313',
+                     'score': '547',
+                     'semester': '1',
+                     'year': '2015-2016'
+                     },
+                ]
+        """
+        soup = self._url2soup(method='get', url=URL.jwxt_grade(self.account))
+        results = []
+        for tr in soup.select("#DataGrid1 > tr")[1:]:
+            names = ['year', 'semester', 'name', 'number', 'date', 'score']
+            # 学年 学期 考试名称 准考证号 考试日期 成绩
+            result = {}
+            for name, td in zip(names, tr.select('td')[:6]):
+                result[name] = td.text
+            results.append(result)
+        return results
+
+    @zhengfang_logined
     def get_class_schedule(self, week, year=None, semester=None):
         """
         获取指定学期指定周的课表（不传入年份和学期则默认当前学期）
@@ -26,7 +54,7 @@ class Zhengfang(Model):
         if year and semester:
             pass
         else:
-            r = self._execute(method='get', url=URL.jwxt_class_schedule(self.account))
+            r = self.get(url=URL.jwxt_class_schedule(self.account))
             soup = BeautifulSoup(r.text.replace('<br>', '\n'), 'lxml')
             trs = soup.select("#Table1 > tr")
             schedule = {}
@@ -62,19 +90,18 @@ class Zhengfang(Model):
                         ]
                     }
         """
-        viewstate = self._get_viewstate(url=URL.jwxt_grade(self.account))
+        viewstate = self._get_viewstate(url=URL.jwxt_score(self.account))
         data = {
             'ddlXN': '',
             'ddlXQ': '',
             '__VIEWSTATE': viewstate,
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
-        r = self._execute(method='post', url=URL.jwxt_grade(self.account), data=data)
-        soup = BeautifulSoup(r.text, 'lxml')
+        soup = self._url2soup(method='post', url=URL.jwxt_score(self.account), data=data)
         result = {'gpa': float(soup.select_one('#pjxfjd > b').text[7:])}
         cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minorMark',
                 'makeUpScore', 'retakeScore', 'college', 'note', 'retakeMark', 'englishName']
-        #  学年 学号 课程代码 课程名称 课程性质 课程归属 学分 绩点 成绩 辅修标记 补考成绩 重修成绩 开课学院 备注 重修标记
+        #  学年 学期 课程代码 课程名称 课程性质 课程归属 学分 绩点 成绩 辅修标记 补考成绩 重修成绩 开课学院 备注 重修标记 英文名称
         coursers = []
         for tr in soup.select('#Datagrid1  > tr')[1:]:
             courser = {}
@@ -109,7 +136,7 @@ class Zhengfang(Model):
         return result
 
     def _login_execute(self, url=None, data=None):
-        r = self._execute(method="post", url=url, data=data)
+        r = self.post(url=url, data=data)
         if r.ok:
             if "请到信息维护中完善个人联系方式" in r.text:
                 self.account = data['txtUserName']

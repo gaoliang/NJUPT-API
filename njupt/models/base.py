@@ -33,8 +33,7 @@ class Model(requests.Session):
 
     def _get_viewstate(self, url=None):
         self.headers['Referer'] = url
-        response = self._execute('get', url)
-        soup = BeautifulSoup(response.content, "lxml")
+        soup = self._url2soup('get', url)
         viewstate = soup.find('input', attrs={"name": "__VIEWSTATE"}).get("value")
         return viewstate
 
@@ -52,7 +51,7 @@ class Model(requests.Session):
         if url == URL.jwxt_captcha():
             return str(ZhengfangCaptcha(im))
 
-    def _execute(self, method="post", url=None, params=None, json=None, data=None, **kwargs):
+    def _url2soup(self, method="post", url=None, params=None, json=None, data=None, **kwargs):
         """
         通用请求方法
         :param method: 请求方法
@@ -61,10 +60,14 @@ class Model(requests.Session):
         :param data:    请求数据
         :param data_type:    提交的数据格式(可能是表单类型,也可能是json格式的字符串)
         :param kwargs:  requests支持的参数，比如可以设置代理参数
-        :return: response
+        :return: BeautifulSoup对象
         """
         r = getattr(self, method)(url, json=json, data=data, params=params, **kwargs)
-        return r
+        if r.ok:
+            soup = BeautifulSoup(r.text, 'lxml')
+            return soup
+        else:
+            raise ConnectionError("检查网络连接")
 
 
 if __name__ == "__main__":

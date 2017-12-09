@@ -25,7 +25,7 @@ class Aolan(Model):
         return self._login_execute(url=URL.aolan_login(), data=data)
 
     def _login_execute(self, url=None, data=None):
-        r = self._execute(method="post", url=url, data=data)
+        r = self.post(url=url, data=data)
         if r.ok:
             if "辅导员评议" in r.text:
                 self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
@@ -55,7 +55,7 @@ class LibAccount(Model):
         return self._login_execute(url=URL.jwxt_login(), data=data)
 
     def _login_execute(self, url=None, data=None):
-        r = self._execute(method="post", url=url, data=data)
+        r =self.post(url=url, data=data)
         if r.ok:
             print(r.text)
             if "请到信息维护中完善个人联系方式" in r.text:

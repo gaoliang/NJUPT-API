@@ -95,3 +95,8 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# ignore pycharm
+.idea
+
+# ignore vscode
+.vscode

@@ -62,12 +62,23 @@ class Model(requests.Session):
         :param kwargs:  requests支持的参数，比如可以设置代理参数
         :return: BeautifulSoup对象
         """
-        r = getattr(self, method)(url, json=json, data=data, params=params, **kwargs)
-        if r.ok:
-            soup = BeautifulSoup(r.text, 'lxml')
-            return soup
+        # r = getattr(self, method)(url, json=json, data=data, params=params, **kwargs)
+        # if r.ok:
+        #     soup = BeautifulSoup(r.text, 'lxml')
+        #     return soup
+        # else:
+        #     raise ConnectionError("检查网络连接")
+
+        try:  # 出现网络连接问题,直接在该处抛出错误
+            r = getattr(self, method)(url, json=json, data=data, params=params, **kwargs)
+        except ConnectionError:
+            raise ConnectionError("请检查网络连接")
         else:
-            raise ConnectionError("检查网络连接")
+            if r.ok:  # 状态码小于400为True
+                soup = BeautifulSoup(r.text, 'lxml')
+                return soup
+            else:  # 处理其他状态码
+                raise Exception('请确保能够正常访问当前页面: {}'.format(url))
 
 
 if __name__ == "__main__":

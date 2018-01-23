@@ -141,7 +141,8 @@ class Zhengfang(Model):
             if "请到信息维护中完善个人联系方式" in r.text:
                 self.account = data['txtUserName']
                 self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
-                self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
+                self.verify = True  # 登陆成功, 修改状态  (后期还可能继续修改)
+                # self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
                 return {'r': 0, 'msg': '登录成功'}
             elif "密码错误！！" in r.text:
                 return {'r': 1, 'msg': '密码错误！！'}

@@ -3,6 +3,7 @@ import hashlib
 from njupt import settings
 from njupt.models.base import Model
 from njupt.urls import URL
+from njupt.utils import AolanCaptcha
 
 
 class Aolan(Model):
@@ -13,12 +14,13 @@ class Aolan(Model):
         :param password: 密码
         :return: {'r': 1, "msg": "登录失败"} 或 {'r': 0, 'msg': '登录成功'}
         """
+        captcha_code = AolanCaptcha(self._url2image(URL.aolan_captcha())).crack()
         data = {
             "__VIEWSTATE": self._get_viewstate(URL.aolan_login()),
-            '__VIEWSTATEGENERATOR': self._get_viewstategenerator(URL.aolan_login()),
+            '__VIEWSTATEGENERATOR': captcha_code,
             'userbh': account,
             'pas2s': hashlib.md5(password.upper().encode('utf8')).hexdigest(),
-            "vcode": self._get_captcha(URL.aolan_captcha()),
+            "vcode": (URL.aolan_captcha()),
             "cw": "",
             "xzbz": "1",
         }
@@ -28,37 +30,6 @@ class Aolan(Model):
         r = self.post(url=url, data=data)
         if r.ok:
             if "辅导员评议" in r.text:
-                self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
-                self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
-                return {'r': 0, 'msg': '登录成功'}
-            else:
-                return {'r': 1, 'msg': '检查账号密码验证码是否正确'}
-        else:
-            return {'r': 1, "msg": "登录失败"}
-
-
-class LibAccount(Model):
-    def login(self, account, password):
-        """
-        登录南邮图书馆 jwxt.njupt.edu.cn
-        :param account: 南邮学号
-        :param password: 密码
-        :return: {'r': 1, "msg": "登录失败"} 或 {'r': 0, 'msg': '登录成功'}
-        """
-        data = {
-            "number": account,
-            'passwd': password,
-            'captcha': self._get_captcha(URL.lib_captcha()),
-            'select': "cert_no",
-            "returnUrl": "",
-        }
-        return self._login_execute(url=URL.jwxt_login(), data=data)
-
-    def _login_execute(self, url=None, data=None):
-        r =self.post(url=url, data=data)
-        if r.ok:
-            print(r.text)
-            if "请到信息维护中完善个人联系方式" in r.text:
                 self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
                 self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
                 return {'r': 0, 'msg': '登录成功'}

@@ -18,7 +18,7 @@ zhengfang = Zhengfang()
 # 验证码自动识别
 zhengfang.login('B1xxxxxxx','password')
 ```
-##### 获取课程成绩和绩点
+#### 获取课程成绩和绩点
 ```python
 >>> zhengfang.get_score() 
     {'gpa': 4.99,
@@ -44,7 +44,7 @@ zhengfang.login('B1xxxxxxx','password')
     }
 ```
 
-##### 获取等级考试信息
+#### 获取等级考试信息
 ```python
 >>> zhengfang.get_grade() 
     [
@@ -60,6 +60,47 @@ zhengfang.login('B1xxxxxxx','password')
     ]
 ```
 
+### 校园卡系统
+#### 登录
+```python
+
+from njupt import Card
+card = Card('11020xxxxxxxxxx','passwd')
+# or card = Card(), card.login(account,password)
+```
+
+#### 获取余额
+```python
+>>> card.get_balance()
+    233
+```
+#### 获取账单
+```python
+>>> card.get_bill()
+    {'recodes': 
+        [
+            {'balances': 39.71, # 余额
+              'change': -5, # 变动
+              'comment': '未知系统,交电费', # 注释
+              'department': '仙林售电处', # 操作部门
+              'time': '2018-01-26 20:55:40', # 时间
+              'type': '代扣代缴', # 类型
+              'week': '星期五'}, # 星期
+            {'balances': 39.71,
+              'change': -7.5,
+              'comment': '',
+              'department': '一餐厅二楼清真食堂',
+              'time': '2018-01-24 17:09:36',
+              'type': '持卡人消费',
+              'week': '星期三'}
+               ... 
+        ],
+    'total': 52 # 总的记录数
+    'total_pages':2 # 总页数
+    'page':1  # 当前的页码
+    }
+```
+
 ### 奥兰系统
 #### 登录
 ```python
@@ -70,6 +111,7 @@ aolan =  Aolan()
 aolan.login('B1xxxxxxx','password')
 
 ```
+
 
 ## todos
 

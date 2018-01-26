@@ -29,7 +29,6 @@ class CardCaptcha:
         for x in range(self.im.width):
             for y in range(self.im.height):
                 pix = self.im.getpixel((x, y))
-                print(pix)
                 if pix > threshold:
                     self.im.putpixel((x, y), WHITE)
                 else:
@@ -94,4 +93,4 @@ class CardCaptcha:
 
 if __name__ == "__main__":
     im = Image.open("captchas/86685.gif")
-    print(CardCaptcha(im).crack())
+    # print(CardCaptcha(im).crack())

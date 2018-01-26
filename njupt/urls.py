@@ -5,52 +5,69 @@
 
 
 class URL(object):
-    host = "https://www.njupt.edu.cn"
-    jwxt_host = "http://jwxt.njupt.edu.cn"
-    aolan_host = "http://stu.njupt.edu.cn"
-    lib_host = "http://202.119.228.6:8080"
+    HOST = "https://www.njupt.edu.cn"
+    ZHENGFANG_HOST = "http://jwxt.njupt.edu.cn"
+    AOLAN_HOST = "http://stu.njupt.edu.cn"
+    LIB_HOST = "http://202.119.228.6:8080"
+    CARD_HOST = "http://yktapp.njupt.edu.cn:8070"
 
     @classmethod
-    def jwxt_logintest(cls):
-        return cls.jwxt_host + '/content.aspx'
+    def zhengfang_logintest(cls):
+        return cls.ZHENGFANG_HOST + '/content.aspx'
 
     @classmethod
-    def jwxt_score(cls, account):
-        return cls.jwxt_host + '/xscj_gc.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121605'.format(account)
+    def zhengfang_score(cls, account):
+        return cls.ZHENGFANG_HOST + '/xscj_gc.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121605'.format(account)
 
     @classmethod
-    def jwxt_class_schedule(cls, account):
-        return cls.jwxt_host + '/xskbcx.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121603'.format(account)
+    def zhengfang_class_schedule(cls, account):
+        return cls.ZHENGFANG_HOST + '/xskbcx.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121603'.format(account)
 
     @classmethod
-    def jwxt_grade(cls, account):
-        return cls.jwxt_host + '/xsdjkscx.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121606'.format(account)
+    def zhengfang_grade(cls, account):
+        return cls.ZHENGFANG_HOST + '/xsdjkscx.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121606'.format(account)
 
     @classmethod
-    def jwxt_captcha(cls):
+    def zhengfang_captcha(cls):
         # 教务系统验证码
-        return cls.jwxt_host + '/CheckCode.aspx'
+        return cls.ZHENGFANG_HOST + '/CheckCode.aspx'
 
     @classmethod
-    def jwxt_login(cls):
+    def zhengfang_login(cls):
         # 教务系统登录
-        return cls.jwxt_host + '/default2.aspx'
+        return cls.ZHENGFANG_HOST + '/default2.aspx'
 
     @classmethod
     def aolan_captcha(cls):
-        return cls.aolan_host + '/VCode.aspx'
+        return cls.AOLAN_HOST + '/VCode.aspx'
 
     @classmethod
     def aolan_login(cls):
         # 奥兰系统登录
-        return cls.aolan_host + "/LOGIN.ASPX"
+        return cls.AOLAN_HOST + "/LOGIN.ASPX"
 
     @classmethod
     def lib_login(cls):
         # 图书馆登录
-        return cls.lib_host + '/reader/redr_verify.php'
+        return cls.LIB_HOST + '/reader/redr_verify.php'
 
     @classmethod
     def lib_captcha(cls):
         # 图书馆验证码
-        return cls.lib_host + '/reader/captcha.php'
+        return cls.LIB_HOST + '/reader/captcha.php'
+
+    @classmethod
+    def card_login(cls):
+        return cls.CARD_HOST + '/Login/LoginBySnoQuery'
+
+    @classmethod
+    def card_captcha(cls):
+        return cls.CARD_HOST + '/Login/GetValidateCode'
+
+    @classmethod
+    def card_info(cls):
+        return cls.CARD_HOST + '/User/GetCardInfoByAccountNoParm'
+
+    @classmethod
+    def card_bill(cls):
+        return cls.CARD_HOST + '/Report/GetMyBill'

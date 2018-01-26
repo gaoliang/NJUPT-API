@@ -1,12 +1,9 @@
 # encoding: utf-8
-from pprint import pprint
-
 from bs4 import BeautifulSoup
-
-from njupt import settings
 from njupt.decorators.zhengfang_logined import zhengfang_logined
 from njupt.models.base import Model
 from njupt.urls import URL
+from njupt.utils import ZhengfangCaptcha
 
 
 class Zhengfang(Model):
@@ -31,7 +28,7 @@ class Zhengfang(Model):
                      },
                 ]
         """
-        soup = self._url2soup(method='get', url=URL.jwxt_grade(self.account))
+        soup = self._url2soup(method='get', url=URL.zhengfang_grade(self.account))
         results = []
         for tr in soup.select("#DataGrid1 > tr")[1:]:
             names = ['year', 'semester', 'name', 'number', 'date', 'score']
@@ -54,7 +51,7 @@ class Zhengfang(Model):
         if year and semester:
             pass
         else:
-            r = self.get(url=URL.jwxt_class_schedule(self.account))
+            r = self.get(url=URL.zhengfang_class_schedule(self.account))
             soup = BeautifulSoup(r.text.replace('<br>', '\n'), 'lxml')
             trs = soup.select("#Table1 > tr")
             schedule = {}
@@ -90,14 +87,14 @@ class Zhengfang(Model):
                         ]
                     }
         """
-        viewstate = self._get_viewstate(url=URL.jwxt_score(self.account))
+        viewstate = self._get_viewstate(url=URL.zhengfang_score(self.account))
         data = {
             'ddlXN': '',
             'ddlXQ': '',
             '__VIEWSTATE': viewstate,
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
-        soup = self._url2soup(method='post', url=URL.jwxt_score(self.account), data=data)
+        soup = self._url2soup(method='post', url=URL.zhengfang_score(self.account), data=data)
         result = {'gpa': float(soup.select_one('#pjxfjd > b').text[7:])}
         cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minorMark',
                 'makeUpScore', 'retakeScore', 'college', 'note', 'retakeMark', 'englishName']
@@ -119,17 +116,18 @@ class Zhengfang(Model):
         :param password: 密码
         :return: {'r': 1, "msg": "登录失败"} 或 {'r': 0, 'msg': '登录成功'}
         """
+        captcha_code = ZhengfangCaptcha(self._url2image(URL.zhengfang_captcha())).crack()
         data = {
-            "__VIEWSTATE": self._get_viewstate(URL.jwxt_login()),
+            "__VIEWSTATE": self._get_viewstate(URL.zhengfang_login()),
             'txtUserName': account,
             'TextBox2': password,
             'RadioButtonList1': "%D1%A7%C9%FA",
-            "txtSecretCode": self._get_captcha(URL.jwxt_captcha()),
+            "txtSecretCode": captcha_code,
             "Button1": "",
             "hidPdrs": "",
             "hidsc": ""
         }
-        result = self._login_execute(url=URL.jwxt_login(), data=data)
+        result = self._login_execute(url=URL.zhengfang_login(), data=data)
         if result['r'] == 2:
             # 如果验证码错误，尝试递归重复登录
             return self.login(account, password)

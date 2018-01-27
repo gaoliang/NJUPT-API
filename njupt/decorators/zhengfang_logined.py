@@ -40,7 +40,7 @@ def zhengfang_logined(func):
             # 先判断有没有cookie文件, 再判断cookie是否有效
             if 'WEB' in requests.utils.dict_from_cookiejar(self.cookies):
                 # 判断教务系统是否登录成功，根据正方的一个地址无需参数的地址
-                r = self._url2soup(method="get", url=URL.jwxt_logintest())
+                r = self._url2soup(method="get", url=URL.zhengfang_logintest())
                 if 'Object moved to ' not in r.text:
                     self.verify = True
                     return func(self, *args, **kwargs)
@@ -51,4 +51,5 @@ def zhengfang_logined(func):
                     return func(self, *args, **kwargs)
                 else:
                     print(data.get('msg'))
+
     return wrapper

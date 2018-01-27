@@ -58,16 +58,35 @@ class URL(object):
 
     @classmethod
     def card_login(cls):
+        # 一卡通登录
         return cls.CARD_HOST + '/Login/LoginBySnoQuery'
 
     @classmethod
     def card_captcha(cls):
+        # 一卡通验证码
         return cls.CARD_HOST + '/Login/GetValidateCode'
 
     @classmethod
     def card_info(cls):
+        # 一卡通基础信息
         return cls.CARD_HOST + '/User/GetCardInfoByAccountNoParm'
 
     @classmethod
     def card_bill(cls):
+        # 一卡通详单
         return cls.CARD_HOST + '/Report/GetMyBill'
+
+    @classmethod
+    def card_recharge(cls):
+        # 一卡通充值
+        return cls.CARD_HOST + '/User/Account_Pay'
+
+    @classmethod
+    def card_net(cls):
+        # 一卡通Dr.com信息
+        return cls.CARD_HOST + '/Tsm/TsmCommon'
+
+    @classmethod
+    def card_net_pay(cls):
+        # 一卡通网费充值
+        return cls.CARD_HOST + '/Tsm/Net_Pay'

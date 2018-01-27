@@ -12,14 +12,20 @@ class CardTestCase(unittest.TestCase):
 
     def test_login(self):
         card = Card()
-        self.assertEqual(0, card.login(card_account, card_right_password)['errorCode'])
-        self.assertEqual(1, card.login(card_account, card_wrong_password)['errorCode'])
+        self.assertEqual(0, card.login(card_account, card_right_password)['code'])
+        self.assertEqual(1, card.login(card_account, card_wrong_password)['code'])
+        self.assertTrue(card.login(card_account, card_right_password)['success'])
+        self.assertFalse(card.login(card_account, card_wrong_password)['success'])
 
     def test_balance(self):
         card = Card()
         card.login(card_account, card_right_password)
-        self.assertGreaterEqual(card.get_balance(), 0)
+        self.assertGreaterEqual(card.get_balance()['total'], 0)
 
     def test_bill(self):
         card = Card(account=card_account, password=card_right_password)
         self.assertIn('recodes', card.get_bill())
+
+    def test_net(self):
+        card = Card(account=card_account, password=card_right_password)
+        self.assertGreaterEqual(card.get_net_balance(), 0)

@@ -77,12 +77,12 @@ class Zhengfang(Model):
                         'point': '',
                         'score': '81',
                         'minorMark': '0',
-                        'makeUpScore': '',
-                        'retakeScore': '',
+                        'make_up_score': '',
+                        'retake_score': '',
                         'college': '网络课程',
                         'note': '',
-                        'retakeMark': '0',
-                        'englishName': ''
+                        'retake_mark': '0',
+                        'english_name': ''
                         }, 
                         ]
                     }
@@ -96,8 +96,8 @@ class Zhengfang(Model):
         }
         soup = self._url2soup(method='post', url=URL.zhengfang_score(self.account), data=data)
         result = {'gpa': float(soup.select_one('#pjxfjd > b').text[7:])}
-        cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minorMark',
-                'makeUpScore', 'retakeScore', 'college', 'note', 'retakeMark', 'englishName']
+        cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minor_mark',
+                'make_up_score', 'retake_score', 'college', 'note', 'retake_mark', 'english_name']
         #  学年 学期 课程代码 课程名称 课程性质 课程归属 学分 绩点 成绩 辅修标记 补考成绩 重修成绩 开课学院 备注 重修标记 英文名称
         coursers = []
         for tr in soup.select('#Datagrid1  > tr')[1:]:
@@ -114,7 +114,7 @@ class Zhengfang(Model):
         登录教务系统 jwxt.njupt.edu.cn
         :param account: 南邮学号
         :param password: 密码
-        :return: {'r': 1, "msg": "登录失败"} 或 {'r': 0, 'msg': '登录成功'}
+        :return: {'code': 1, "msg": "登录失败"} 或 {'code': 0, 'msg': '登录成功'}
         """
         captcha_code = ZhengfangCaptcha(self._url2image(URL.zhengfang_captcha())).crack()
         data = {
@@ -128,9 +128,10 @@ class Zhengfang(Model):
             "hidsc": ""
         }
         result = self._login_execute(url=URL.zhengfang_login(), data=data)
-        if result['r'] == 2:
+        if result['code'] == 2:
             # 如果验证码错误，尝试递归重复登录
             return self.login(account, password)
+        result['success'] = not result['code']
         return result
 
     def _login_execute(self, url=None, data=None):
@@ -141,12 +142,12 @@ class Zhengfang(Model):
                 self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
                 self.verify = True  # 登陆成功, 修改状态  (后期还可能继续修改)
                 # self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
-                return {'r': 0, 'msg': '登录成功'}
+                return {'code': 0, 'msg': '登录成功'}
             elif "密码错误！！" in r.text:
-                return {'r': 1, 'msg': '密码错误！！'}
+                return {'code': 1, 'msg': '密码错误！！'}
             elif "验证码不正确！！" in r.text:
-                return {'r': 2, 'msg': '验证码不正确！！！'}
+                return {'code': 2, 'msg': '验证码不正确！！！'}
             else:
-                return {'r': 3, 'msg': '未知错误'}
+                return {'code': 3, 'msg': '未知错误'}
         else:
-            return {'r': 1, "msg": "登录失败"}
+            return {'code': 1, "msg": "登录失败"}

@@ -1,5 +1,5 @@
 
-## NJUPT-API 简介
+# NJUPT-API 简介
 
 NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简洁、优雅的、Pythonic的API接口，以便用户能够在此基础上进行扩展开发。
 
@@ -7,18 +7,23 @@ NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简�
 
 欢迎pr
 
-## 目前实现的功能
-### 正方系统
+# 目前实现的功能
+## 正方系统
 
-##### 登录
+### 登录
 ```python
 from njupt import Zhengfang
 zhengfang = Zhengfang()
+>> zhengfang.login('B1xxxxxxx','password')
+    {
+        'success':True,
+        'code':0,
+        'msg':'登录成功'
+    }
+# or zhengfang = Zhengfang('B1xxxxxxx','password')
 
-# 验证码自动识别
-zhengfang.login('B1xxxxxxx','password')
 ```
-#### 获取课程成绩和绩点
+### 获取课程成绩和绩点
 ```python
 >>> zhengfang.get_score() 
     {'gpa': 4.99,
@@ -32,19 +37,19 @@ zhengfang.login('B1xxxxxxx','password')
         'credit': '2.0', # 学分
         'point': '', # 绩点
         'score': '81', # 成绩
-        'minorMark': '0', # 辅修标记
-        'makeUpScore': '', # 辅修标记
-        'retakeScore': '', # 重修成绩 
+        'minor_mark': '0', # 辅修标记
+        'make_up_score': '', # 辅修标记
+        'retake_score': '', # 重修成绩 
         'college': '网络课程', # 开课学院
         'note': '', # 备注 
-        'retakeMark': '0', # 重修标记
-        'englishName': '' # 英文名称
+        'retake_mark': '0', # 重修标记
+        'english_name': '' # 英文名称
         }, 
         ]
     }
 ```
 
-#### 获取等级考试信息
+### 获取等级考试信息
 ```python
 >>> zhengfang.get_grade() 
     [
@@ -60,21 +65,40 @@ zhengfang.login('B1xxxxxxx','password')
     ]
 ```
 
-### 校园卡系统
-#### 登录
+## 校园卡系统
+### 登录
 ```python
 
 from njupt import Card
-card = Card('11020xxxxxxxxxx','passwd')
+>>> card = Card('11020xxxxxxxxxx','passwd')
+    {
+        'success': True,
+        'code': 0, 
+        'msg': '登录成功'
+    }
+
 # or card = Card(), card.login(account,password)
 ```
 
-#### 获取余额
+### 获取余额
 ```python
 >>> card.get_balance()
-    233
+    {
+        'balance': 10.01,  # 到账余额
+        'unsettle_balance': 0.01  # 过渡余额
+        'total': 10.02  # 总余额
+    }
 ```
-#### 获取账单
+### 充值(绑定银行卡 -> 校园卡)
+```python
+>>> card.recharge(2.33)
+    {   
+        'success':True,  # 转账是否成功
+        'code': 0,  # 状态码
+        'msg': '转账成功'  # 附加信息
+    }
+```
+### 获取账单
 ```python
 >>> card.get_bill()
     {'recodes': 
@@ -101,8 +125,24 @@ card = Card('11020xxxxxxxxxx','passwd')
     }
 ```
 
-### 奥兰系统
-#### 登录
+### 获取Dr.com的网费余额
+```python
+>>> card.get_net_balance()
+    2.33
+```
+
+### 充值网费
+```python
+>>> card.recharge_net(2.33)
+    {
+        'success': True, 
+        'code' : 0,
+        'Msg' : '充值成功'
+    }
+```
+
+## 奥兰系统
+### 登录
 ```python
 from njupt import Aolan
 aolan =  Aolan()
@@ -113,6 +153,6 @@ aolan.login('B1xxxxxxx','password')
 ```
 
 
-## todos
+# todos
 
 各种接口。。欢迎pr

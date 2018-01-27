@@ -10,14 +10,15 @@ class ZhengfangTestCase(unittest.TestCase):
 
     def test_login(self):
         zhengfang = Zhengfang()
-        self.assertEqual(1, zhengfang.login(account, wrong_password)['r'])
-        self.assertEqual(0, zhengfang.login(account, right_password)['r'])
+        self.assertEqual(1, zhengfang.login(account, wrong_password)['code'])
+        self.assertEqual(0, zhengfang.login(account, right_password)['code'])
+        self.assertTrue(zhengfang.login(account, right_password)['success'])
+        self.assertFalse(zhengfang.login(account, wrong_password)['success'])
 
     def test_get_score(self):
         zhengfang = Zhengfang()
         zhengfang.login(account, right_password)
         self.assertIn('gpa', zhengfang.get_score())
-        print(zhengfang.get_score())
 
     def test_get_schedule(self):
         zhengfang = Zhengfang()

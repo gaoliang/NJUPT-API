@@ -11,7 +11,6 @@ import urllib3
 from bs4 import BeautifulSoup
 from http import cookiejar
 from njupt import settings
-from njupt.urls import URL
 from PIL import Image
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

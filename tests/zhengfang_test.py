@@ -1,4 +1,6 @@
 import unittest
+
+from njupt.error import ZhengfangNotLogin
 from njupt.models.zhengfang import Zhengfang
 from tests.account_for_test import account, right_password, wrong_password
 
@@ -7,6 +9,12 @@ class ZhengfangTestCase(unittest.TestCase):
     """
     test zhengfang， need define account right password and wrong password before test
     """
+
+
+    def test_not_login(self):
+        zhengfang = Zhengfang()
+        self.assertRaises(ZhengfangNotLogin, zhengfang.get_score)
+
 
     def test_login(self):
         zhengfang = Zhengfang()

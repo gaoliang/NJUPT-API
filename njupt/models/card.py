@@ -4,6 +4,7 @@ import datetime
 import json
 from pprint import pprint
 
+from njupt.decorators.card_logined import card_logined
 from njupt.error import NjuptError
 from njupt.models.base import Model
 from njupt.urls import URL
@@ -51,6 +52,8 @@ class Card(Model):
             # 如果验证码错误，尝试递归重复登录
             return self.login(account, password)
         result['success'] = not result['code']
+        if result['success']:
+            self.verify = True
         return result
 
     def _login_execute(self, url=None, data=None):
@@ -74,6 +77,7 @@ class Card(Model):
             self.inner_account = result['query_card']['card'][0]['account']
         return self.inner_account
 
+    @card_logined
     def get_balance(self):
         """
         查询余额
@@ -94,6 +98,7 @@ class Card(Model):
             'total': balance + unsettle_balance,  # 总余额
         }
 
+    @card_logined
     def get_net_balance(self):
         """
         获取Dr.com的上网费用余额
@@ -109,6 +114,7 @@ class Card(Model):
         result = json.loads(result['Msg'])
         return float(result['query_net_info']['errmsg'][12:][:-1])
 
+    @card_logined
     def recharge(self, amount=0.01):
         """
         从绑定的银行卡中扣款充值余额
@@ -139,6 +145,7 @@ class Card(Model):
         }
         return result
 
+    @card_logined
     def recharge_net(self, amount=0.01):
         """
         充值网费（从校园卡余额中）
@@ -187,6 +194,7 @@ class Card(Model):
             building_id[build['building']] = build['buildingid']
         return building_id
 
+    @card_logined
     def recharge_xianlin_elec(self, amount, building_name, room_id):
         """
         充值仙林校区的寝室电费
@@ -202,6 +210,7 @@ class Card(Model):
         except KeyError:
             raise NjuptError("不存在的楼栋")
 
+    @card_logined
     def recharge_sanpailou_elec(self, amount, building_name, room_id):
         """
         充值三牌楼校区的寝室电费，参数参考仙林校区（未测试
@@ -238,6 +247,7 @@ class Card(Model):
             'msg': r['pay_elec_gdc']['errmsg'],
         }
 
+    @card_logined
     def get_bill(self, start_date=(datetime.datetime.now() - datetime.timedelta(days=30)).strftime("%Y-%m-%d"),
                  end_date=datetime.datetime.now().strftime("%Y-%m-%d"), rows=100, page=1):
         """

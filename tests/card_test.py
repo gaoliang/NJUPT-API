@@ -1,7 +1,7 @@
 import unittest
 from pprint import pprint
 
-from njupt.error import NjuptError
+from njupt.error import NjuptError, CardNotLogin
 from njupt.models.card import Card
 from tests.account_for_test import card_account, card_right_password, card_wrong_password
 
@@ -10,6 +10,10 @@ class CardTestCase(unittest.TestCase):
     """
     test card， need define account right password and wrong password before test
     """
+
+    def test_not_login(self):
+        card = Card()
+        self.assertRaises(CardNotLogin, card.get_balance)
 
     def test_login(self):
         card = Card()

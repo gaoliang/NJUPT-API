@@ -174,18 +174,7 @@ from njupt import Card
     # 三牌楼校区为card.recharge_sanpailou_elec()，参数相同（未测试）
 ```
 
-## 奥兰系统
-### 登录
-```python
-from njupt import Aolan
-aolan =  Aolan()
-
-# 验证码自动识别
-aolan.login(account='B1xxxxxxx',password='password')
-
-```
-
 
 # todos
 
-各种接口。。欢迎pr
+图书馆系统和奥兰系统的常用接口

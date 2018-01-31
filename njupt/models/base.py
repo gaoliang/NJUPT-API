@@ -19,11 +19,11 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class Model(requests.Session):
     def __init__(self):
         super(Model, self).__init__()
-        self.cookies = cookiejar.LWPCookieJar(filename=settings.COOKIES_FILE)
-        try:
-            self.cookies.load(ignore_discard=True)
-        except FileNotFoundError:
-            pass
+        # self.cookies = cookiejar.LWPCookieJar(filename=settings.COOKIES_FILE)
+        # try:
+        #     self.cookies.load(ignore_discard=True)
+        # except FileNotFoundError:
+        #     pass
         self.verify = False
         self.headers = settings.HEADERS
 

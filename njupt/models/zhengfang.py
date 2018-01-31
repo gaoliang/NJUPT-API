@@ -1,5 +1,4 @@
 # encoding: utf-8
-from pprint import pprint
 import re
 from bs4 import BeautifulSoup
 from njupt.decorators.zhengfang_logined import zhengfang_logined
@@ -169,6 +168,8 @@ class Zhengfang(Model):
             # 如果验证码错误，尝试递归重复登录
             return self.login(account, password)
         result['success'] = not result['code']
+        if result['success']:
+            self.verify = True
         return result
 
     def _login_execute(self, url=None, data=None):
@@ -176,7 +177,7 @@ class Zhengfang(Model):
         if r.ok:
             if "请到信息维护中完善个人联系方式" in r.text:
                 self.account = data['txtUserName']
-                self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
+                # self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
                 self.verify = True  # 登陆成功, 修改状态  (后期还可能继续修改)
                 # self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
                 return {'code': 0, 'msg': '登录成功'}
@@ -191,4 +192,4 @@ class Zhengfang(Model):
 
 
 if __name__ == "__main__":
-    zhengfang = Zhengfang()
+    pass

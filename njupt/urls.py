@@ -82,7 +82,7 @@ class URL(object):
         return cls.CARD_HOST + '/User/Account_Pay'
 
     @classmethod
-    def card_net(cls):
+    def card_common(cls):
         # 一卡通Dr.com信息
         return cls.CARD_HOST + '/Tsm/TsmCommon'
 
@@ -90,3 +90,7 @@ class URL(object):
     def card_net_pay(cls):
         # 一卡通网费充值
         return cls.CARD_HOST + '/Tsm/Net_Pay'
+
+    @classmethod
+    def card_elec_pay(cls):
+        return cls.CARD_HOST + '/Tsm/Elec_Pay'

@@ -2,16 +2,27 @@
 import base64
 import datetime
 import json
+from pprint import pprint
 
+from njupt.error import NjuptError
 from njupt.models.base import Model
 from njupt.urls import URL
 from njupt.utils import CardCaptcha
+
+AIDS = {
+    'elec_xianlin': '0030000000005101',
+    'elec_sanpailou': '0030000000005102',
+    'net': '0030000000000301'
+}
 
 
 class Card(Model):
     def __init__(self, account=None, password=None):
         super(Card, self).__init__()
         self.aid = None
+
+        # 该系统使用aid区分业务类型
+
         self.inner_account = None
         if account and password:
             self.account = account
@@ -20,8 +31,8 @@ class Card(Model):
     def login(self, account, password):
         """
         登录校园卡网站
-        :param account: 校园卡卡号
-        :param password: 校园卡查询密码
+        :param str account: 校园卡卡号
+        :param str password: 校园卡查询密码
         :return: {'code': 1, "msg": "登录失败，请重试"} 或 {'code': 0, 'msg': '登录成功'}
         """
         captcha_code = CardCaptcha(self._url2image(URL.card_captcha())).crack()
@@ -63,19 +74,6 @@ class Card(Model):
             self.inner_account = result['query_card']['card'][0]['account']
         return self.inner_account
 
-    def _get_aid(self):
-        """获取内部的aid"""
-        if not self.aid:
-            data = {
-                'jsondata': '{"query_applist": {"apptype": "net"}}',
-                'funname': 'synjones.onecard.query.applist',
-                'json': True
-            }
-            result = self._url2json(url=URL.card_net(), data=data, method='post')
-            result = json.loads(result['Msg'])
-            self.aid = result['query_applist']['applist'][0]['aid']
-        return self.aid
-
     def get_balance(self):
         """
         查询余额
@@ -103,11 +101,11 @@ class Card(Model):
         """
         data = {
             'jsondata': '{"query_net_info": {"aid": "%s", "account": "%s", "payacc": ""}}'  # 无法使用format格式化
-                        % (self._get_aid(), self._get_inner_account()),
+                        % (AIDS['net'], self._get_inner_account()),
             'funname': 'synjones.onecard.query.net.info',
             'json': True,
         }
-        result = self._url2json(url=URL.card_net(), data=data, method='post')
+        result = self._url2json(url=URL.card_common(), data=data, method='post')
         result = json.loads(result['Msg'])
         return float(result['query_net_info']['errmsg'][12:][:-1])
 
@@ -154,7 +152,7 @@ class Card(Model):
         """
         data = {
             'paytype': 1,
-            'aid': self._get_aid(),
+            'aid': AIDS['net'],
             'account': self._get_inner_account(),
             'tran': int(amount * 100),
             'netacc': '{"netacc": "", "bal": null, "pkgid": null, "lostflag": null, "freezeflag": null, '
@@ -171,6 +169,73 @@ class Card(Model):
             'success': not int(result['pay_net_gdc']['retcode']),
             'code': int(result['pay_net_gdc']['retcode']),
             'msg': result['pay_net_gdc']['errmsg']
+        }
+
+    def _get_build_ids(self, aid):
+        """获取建筑的id"""
+        data = {
+            'jsondata': '{"query_elec_building": {"aid": "%s", "account": "%s", "area": {"area": "", "areaname": ""}}}'
+                        % (aid, self._get_inner_account()),
+            'funname': 'synjones.onecard.query.elec.building',
+            'json': True,
+        }
+        result = self._url2json(data=data, url=URL.card_common(), method='post')
+        result = json.loads(result['Msg'])
+        # - -!
+        building_id = {}
+        for build in result['query_elec_building']['buildingtab']:
+            building_id[build['building']] = build['buildingid']
+        return building_id
+
+    def recharge_xianlin_elec(self, amount, building_name, room_id):
+        """
+        充值仙林校区的寝室电费
+        :param amount: 金额 0.01 2.33
+        :param building_name: 楼栋名称，例如 "兰苑11栋" 
+        :param room_id: 房间号，例如4030 -> 403公共 4031 -> 403 1寝空调 4032 -> 403 2寝空调
+        :return: dict {'code': 0, 'msg': '缴费成功！', 'success': True}
+        """
+        try:
+            buiding_id = self._get_build_ids(AIDS['elec_xianlin'])[building_name]
+            return self._recharge_electricity(amount, elec_aid=AIDS['elec_xianlin'], building_id=buiding_id,
+                                              building=building_name, room_id=room_id)
+        except KeyError:
+            raise NjuptError("不存在的楼栋")
+
+    def recharge_sanpailou_elec(self, amount, building_name, room_id):
+        """
+        充值三牌楼校区的寝室电费，参数参考仙林校区（未测试
+        """
+        try:
+            buiding_id = self._get_build_ids(AIDS['elec_sanpailou'])[building_name]
+            return self._recharge_electricity(amount, elec_aid=AIDS['elec_sanpailou'], building_id=buiding_id,
+                                              building=building_name, room_id=room_id)
+        except KeyError:
+            raise NjuptError("不存在的楼栋")
+
+    def _recharge_electricity(self, amount, elec_aid, building_id, building, room_id):
+        data = {
+            "acctype": "###",
+            "paytype": 1,
+            "aid": elec_aid,
+            "account": self._get_inner_account(),
+            "tran": int(amount * 100),
+            "roomid": room_id,
+            "room": "",
+            "floorid": "",
+            "floor": "",
+            "buildingid": building_id,
+            "building": building,
+            "areaid": "",
+            "areaname": "",
+            "json": True
+        }
+
+        r = json.loads(self._url2json(URL.card_elec_pay(), 'post', data=data)['Msg'])
+        return {
+            'success': not bool(int(r['pay_elec_gdc']['retcode'])),
+            'code': int(r['pay_elec_gdc']['retcode']),
+            'msg': r['pay_elec_gdc']['errmsg'],
         }
 
     def get_bill(self, start_date=(datetime.datetime.now() - datetime.timedelta(days=30)).strftime("%Y-%m-%d"),

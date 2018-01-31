@@ -14,7 +14,7 @@ NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简�
 ```python
 from njupt import Zhengfang
 zhengfang = Zhengfang()
->> zhengfang.login('B1xxxxxxx','password')
+>> zhengfang.login(account='B1xxxxxxx',password='password')
     {
         'success':True,
         'code':0,
@@ -70,7 +70,7 @@ zhengfang = Zhengfang()
 ```python
 
 from njupt import Card
->>> card = Card('11020xxxxxxxxxx','passwd')
+>>> card = Card(account='11020xxxxxxxxxx',password='passwd')
     {
         'success': True,
         'code': 0, 
@@ -91,7 +91,7 @@ from njupt import Card
 ```
 ### 充值(绑定银行卡 -> 校园卡)
 ```python
->>> card.recharge(2.33)
+>>> card.recharge(amount=2.33)
     {   
         'success':True,  # 转账是否成功
         'code': 0,  # 状态码
@@ -100,7 +100,7 @@ from njupt import Card
 ```
 ### 获取账单
 ```python
->>> card.get_bill()
+>>> card.get_bill(start_date='2017-02-33',end_date='2018-01-03',rows=30,page=1)
     {'recodes': 
         [
             {'balances': 39.71, # 余额
@@ -133,12 +133,22 @@ from njupt import Card
 
 ### 充值网费
 ```python
->>> card.recharge_net(2.33)
+>>> card.recharge_net(amount=2.33)
     {
         'success': True, 
         'code' : 0,
         'Msg' : '充值成功'
     }
+```
+### 充值寝室电费
+```python
+>>> card.recharge_xianlin_elec(amount=2.33,building_name='兰苑11栋',room_id='4031')
+    {
+        'success': True, 
+        'code' : 0,
+        'Msg' : '缴费成功！'
+    }
+    # 三牌楼校区为card.recharge_sanpailou_elec()，参数相同（未测试）
 ```
 
 ## 奥兰系统
@@ -148,7 +158,7 @@ from njupt import Aolan
 aolan =  Aolan()
 
 # 验证码自动识别
-aolan.login('B1xxxxxxx','password')
+aolan.login(account='B1xxxxxxx',password='password')
 
 ```
 

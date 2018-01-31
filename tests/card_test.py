@@ -1,6 +1,7 @@
 import unittest
 from pprint import pprint
 
+from njupt.error import NjuptError
 from njupt.models.card import Card
 from tests.account_for_test import card_account, card_right_password, card_wrong_password
 
@@ -29,3 +30,9 @@ class CardTestCase(unittest.TestCase):
     def test_net(self):
         card = Card(account=card_account, password=card_right_password)
         self.assertGreaterEqual(card.get_net_balance(), 0)
+
+    def test_recharge(self):
+        card = Card(account=card_account, password=card_right_password)
+        self.assertTrue(card.recharge_xianlin_elec(0.01, '兰苑11栋', '4031')['success'])
+        self.assertRaises(NjuptError, card.recharge_xianlin_elec, 0.01, '稀奇古怪栋', '4031')
+        self.assertFalse(card.recharge_xianlin_elec(-0.01, '兰苑11栋', '4031')['success'])

@@ -1,9 +1,23 @@
 # encoding: utf-8
+from pprint import pprint
+import re
 from bs4 import BeautifulSoup
 from njupt.decorators.zhengfang_logined import zhengfang_logined
 from njupt.models.base import Model
 from njupt.urls import URL
 from njupt.utils import ZhengfangCaptcha
+
+week_re = re.compile(r'第(\d+)-(\d+)周')
+courser_indexs_re = re.compile(r'第(\d+(?:,\d+)*)节')
+chinese_rome = {
+    '一': 1,
+    '二': 2,
+    '三': 3,
+    '四': 4,
+    '五': 5,
+    '六': 6,
+    '七': 7
+}
 
 
 class Zhengfang(Model):
@@ -19,12 +33,12 @@ class Zhengfang(Model):
         获取等级考试成绩信息
         :return: list
                 [
-                    {'date': '20151219',
-                     'name': '全国大学英语四级考试',
-                     'number': '320082152113313',
-                     'score': '547',
-                     'semester': '1',
-                     'year': '2015-2016'
+                    {'date': '20151219',  # 考试日期
+                     'name': '全国大学英语四级考试',  # 考试名称
+                     'number': '320082152113313',  # 准考证号
+                     'score': '547',  # 成绩
+                     'semester': '1',  # 学期
+                     'year': '2015-2016'  # 学年
                      },
                 ]
         """
@@ -32,7 +46,6 @@ class Zhengfang(Model):
         results = []
         for tr in soup.select("#DataGrid1 > tr")[1:]:
             names = ['year', 'semester', 'name', 'number', 'date', 'score']
-            # 学年 学期 考试名称 准考证号 考试日期 成绩
             result = {}
             for name, td in zip(names, tr.select('td')[:6]):
                 result[name] = td.text
@@ -40,52 +53,77 @@ class Zhengfang(Model):
         return results
 
     @zhengfang_logined
-    def get_class_schedule(self, week, year=None, semester=None):
+    def get_schedule(self, week, year=None, semester=None):
         """
         获取指定学期指定周的课表（不传入年份和学期则默认当前学期）
         :param year: 学年 格式为 "2017-2018"
         :param semester: 学期 数字1或2
         :param week: 周次 数字 1-20
-        :return: 
+        :return: 二维列表schedule，schedule[i][j]代表周i第j节课的课程。 为了方便，i或j为零0的单元均不使用。
+                列表的元素为None，代表没有课程，或描述课程信息的dict，dict例如
+                {
+                    'classroom': '教4－202', 
+                    'name': '技术经济学', 
+                    'teacher': '储成祥'
+                }
         """
+        schedule = [[None for col in range(13)] for row in range(8)]
         if year and semester:
             pass
         else:
             r = self.get(url=URL.zhengfang_class_schedule(self.account))
             soup = BeautifulSoup(r.text.replace('<br>', '\n'), 'lxml')
             trs = soup.select("#Table1 > tr")
-            schedule = {}
-            for tr in trs:
+            for index, tr in enumerate(trs):
                 tds = tr.select('td')
                 for td in tds:
-                    print(td.text.split())
+                    if len(td.text) > 4:  # 筛选出包含课程信息的单元格
+                        for courser in td.text.split('\n\n'):
+                            info = courser.split()
+                            start_week, end_week = map(int, week_re.search(info[1]).groups())
+                            courser_indexs = map(int, courser_indexs_re.search(info[1]).groups()[0].split(','))
+                            is_odd_week_only = "单周" in info[1]
+                            is_even_week_only = "双周" in info[1]
+                            week_day = chinese_rome[info[1][1]]
+                            courser = {
+                                'name': info[0],
+                                'teacher': info[2],
+                                'classroom': info[3],
+                            }
+                            if start_week <= week <= end_week:
+                                if (week % 2 == 0 and is_odd_week_only) or (week % 2 == 1 and is_even_week_only):
+                                    pass
+                                else:
+                                    for courser_index in courser_indexs:
+                                        schedule[week_day][courser_index] = courser
+        return schedule
 
     @zhengfang_logined
     def get_score(self):
         """
         获取课程成绩和绩点等信息
         :return: dict 
-                {'gpa': 4.99,
+                {'gpa': 4.99,  # GPA
                     'coursers': [{
-                        'year': '2015-2016',
-                        'semester': '1',
-                        'code': '00wk00003',
-                        'name': '从"愚昧"到"科学"-科学技术简史',
-                        'attribute': '任选',
-                        'belong': '全校任选课',
-                        'credit': '2.0',
-                        'point': '',
-                        'score': '81',
-                        'minorMark': '0',
-                        'make_up_score': '',
-                        'retake_score': '',
-                        'college': '网络课程',
-                        'note': '',
-                        'retake_mark': '0',
-                        'english_name': ''
+                        'year': '2015-2016',  # 修读学年
+                        'semester': '1',  # 修读学期
+                        'code': '00wk00003',  # 课程编号
+                        'name': '从"愚昧"到"科学"-科学技术简史',  # 课程中文名
+                        'attribute': '任选',  # 课程性质
+                        'belong': '全校任选课',  # 课程归属
+                        'credit': '2.0',  # 学分
+                        'point': '',  # 绩点
+                        'score': '81',  # 成绩
+                        'minorMark': '0',  # 重修标记
+                        'make_up_score': '',  # 补考成绩
+                        'retake_score': '',  # 重修成绩
+                        'college': '网络课程',  # 开课学院
+                        'note': '',  # 备注
+                        'retake_mark': '0', # 重修标记
+                        'english_name': ''  # 课程英文名
                         }, 
-                        ]
-                    }
+                    ]
+                }
         """
         viewstate = self._get_viewstate(url=URL.zhengfang_score(self.account))
         data = {
@@ -98,7 +136,6 @@ class Zhengfang(Model):
         result = {'gpa': float(soup.select_one('#pjxfjd > b').text[7:])}
         cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minor_mark',
                 'make_up_score', 'retake_score', 'college', 'note', 'retake_mark', 'english_name']
-        #  学年 学期 课程代码 课程名称 课程性质 课程归属 学分 绩点 成绩 辅修标记 补考成绩 重修成绩 开课学院 备注 重修标记 英文名称
         coursers = []
         for tr in soup.select('#Datagrid1  > tr')[1:]:
             courser = {}
@@ -151,3 +188,7 @@ class Zhengfang(Model):
                 return {'code': 3, 'msg': '未知错误'}
         else:
             return {'code': 1, "msg": "登录失败"}
+
+
+if __name__ == "__main__":
+    zhengfang = Zhengfang()

@@ -23,4 +23,4 @@ class ZhengfangTestCase(unittest.TestCase):
     def test_get_schedule(self):
         zhengfang = Zhengfang()
         zhengfang.login(account, right_password)
-        zhengfang.get_class_schedule(1)
+        self.assertIsNot(zhengfang.get_schedule(1), [[None for col in range(13)] for row in range(8)])

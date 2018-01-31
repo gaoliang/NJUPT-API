@@ -64,6 +64,29 @@ zhengfang = Zhengfang()
         ...
     ]
 ```
+### 获取课表
+```python
+>>> zhengfang.get_schedule(week=1)
+    # 二维列表，[i][j] 代表周i第j节课的课程。 为了方便，i或j为零0的单元均不使用。
+    # 课程的节次使用一天12节课的形式描述。
+    # 课程信息使用dict进行描述。
+    # 一个参考的结构如下
+    [
+        [],
+        [   None,
+            {
+            'classroom': '教4－202', 
+            'name': '技术经济学', 
+            'teacher': '储成祥'
+            },
+            ...
+        ],
+        ...
+    ]
+
+
+
+```
 
 ## 校园卡系统
 ### 登录
@@ -116,11 +139,11 @@ from njupt import Card
               'department': '一餐厅二楼清真食堂',
               'time': '2018-01-24 17:09:36',
               'type': '持卡人消费',
-              'week': '星期三'}
+              'week': '星期三'},
                ... 
         ],
-    'total': 52 # 总的记录数
-    'total_pages':2 # 总页数
+    'total': 52, # 总的记录数
+    'total_pages':2,  # 总页数
     'page':1  # 当前的页码
     }
 ```

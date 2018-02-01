@@ -6,12 +6,13 @@ NJUPT-API的抽象基类，任何对象都可以继承
 
 """
 from io import BytesIO
+
 import requests
 import urllib3
-from bs4 import BeautifulSoup
-from http import cookiejar
-from njupt import settings
 from PIL import Image
+from bs4 import BeautifulSoup
+
+from njupt import settings
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 

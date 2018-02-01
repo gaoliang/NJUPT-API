@@ -1,16 +1,14 @@
-import os
-from PIL import Image
-from sklearn.svm import SVC
-from sklearn.externals import joblib
-
 import hashlib
+import os
+import pickle
 import shutil
+from PIL import Image
+
+from njupt.utils import ZhengfangCaptcha
 
 BLACK = 0
 WHITE = 255
 import time
-
-from .zhengfang_captcha import ZhengfangCaptcha
 
 
 def spilt2chars():
@@ -38,57 +36,22 @@ def spilt2chars():
                 im_part.save("captcha_chars/{}/{}.png".format(value, m.hexdigest()))
 
 
-def buildvector(im):
-    d1 = {}
-    count = 0
-    for i in im.getdata():
-        d1[count] = i
-        count += 1
-    return d1
-
-
-# 提取字母的svm特征值
-def getletter(im):
-    all = []
-    for x in range(im.width):
-        all_t = []
-        for y in range(im.height):
-            all_t.append(1 if im.getpixel((x, y)) > 0 else 0)
-        all += all_t
-    return all
-
-
-# 提取特征值
-def extractLetters(path):
-    """
-    :param path: 存放已经分割好的字符文件夹的父目录路径
-    :return: 提取的特征值
-    """
-    x = []
-    y = []
-    # 遍历文件夹 获取下面的目录
-    for root, sub_dirs, files in os.walk(path):
-        for dir in sub_dirs:
-            # 获得每个文件夹的图片
-            for fileName in os.listdir(path + '/' + dir):
-                print(dir, fileName)
-                if fileName != "Thumbs.db" and fileName != ".DS_Store":
-                    # 打开图片
-                    x.append(getletter(Image.open(path + '/' + dir + '/' + fileName)))
-                    y.append(dir)
-    print(x)
-    return x, y
-
-
-# svm训练
-def trainSVM():
-    array = extractLetters('captcha_chars')
-    # 使用向量机SVM进行机器学习
-    letterSVM = SVC(kernel="linear", C=1, probability=True).fit(array[0], array[1])
-    # 生成训练结果
-    joblib.dump(letterSVM, 'letter.pkl')
-
-
 if __name__ == "__main__":
-    spilt2chars()
-    trainSVM()
+    # spilt2chars()
+    iconset = list('qwertyuiopasdfghjklzcxvbnm1234567890')
+    # 将图像数据转为向量数据并保存
+    imageset = []
+    for letter in iconset:
+        try:
+            for img in os.listdir('captcha_chars/{}/'.format(letter)):
+                temp = []
+                if img != "Thumbs.db" and img != ".DS_Store":
+                    temp.append(ZhengfangCaptcha.buildvector(Image.open("captcha_chars/{}/{}".format(letter, img))))
+                    print(temp)
+
+                imageset.append({letter: temp})
+        except:
+            print(letter)
+
+    with open('imageset.dat', 'wb+') as f:
+        pickle.dump(imageset, f)

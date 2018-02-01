@@ -1,5 +1,4 @@
 # encoding: utf-8
-import os.path
 
 # UserAgent list
 user_agent_list = [

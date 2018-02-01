@@ -2,7 +2,6 @@
 import base64
 import datetime
 import json
-from pprint import pprint
 
 from njupt.decorators.card_logined import card_logined
 from njupt.error import NjuptError
@@ -302,4 +301,4 @@ class Card(Model):
 
 
 if __name__ == "__main__":
-    card = Card()
+    pass

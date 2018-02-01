@@ -1,6 +1,8 @@
 # encoding: utf-8
 import re
+
 from bs4 import BeautifulSoup
+
 from njupt.decorators.zhengfang_logined import zhengfang_logined
 from njupt.models.base import Model
 from njupt.urls import URL

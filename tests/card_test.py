@@ -1,5 +1,4 @@
 import unittest
-from pprint import pprint
 
 from njupt.error import NjuptError, CardNotLogin
 from njupt.models.card import Card

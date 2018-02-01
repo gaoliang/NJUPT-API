@@ -7,6 +7,7 @@ from io import BytesIO
 
 import requests
 from PIL import Image
+
 from njupt.urls import URL
 from njupt.utils.aolan.aolan_captcha import letters
 

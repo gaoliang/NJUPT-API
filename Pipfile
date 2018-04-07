@@ -1,0 +1,23 @@
+[[source]]
+
+url = "https://pypi.doubanio.com/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+"beautifulsoup4" = "*"
+lxml = "*"
+pillow = "*"
+requests = "*"
+
+
+[dev-packages]
+
+"autopep8" = "*"
+
+
+[requires]
+
+python_version = "3.6"

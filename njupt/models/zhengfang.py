@@ -101,15 +101,15 @@ class Zhengfang(Model):
         return schedule
 
     @zhengfang_logined
-    def get_coursers(self):
+    def get_courses(self):
         """
         获取这学期的选课情况
         :return: 
         
         """
-        soup = self._url2soup(method='get', url=URL.zhengfang_coursers(self.account))
+        soup = self._url2soup(method='get', url=URL.zhengfang_courses(self.account))
         trs = soup.select('#DBGrid > tr')[1:]
-        coursers = []
+        courses = []
         for tr in trs:
             tds = [node.text.strip() for node in tr.select('td')]
             name = tds[2]
@@ -120,7 +120,7 @@ class Zhengfang(Model):
                 if time and room:
                     week_start, week_end = map(int, week_re.search(time).groups())
                     courser_index = list(map(int, courser_indexs_re.search(time).groups()[0].split(',')))
-                    coursers.append(
+                    courses.append(
                         {
                             'day': chinese_rome[time[1]],
                             'name': name,
@@ -133,7 +133,7 @@ class Zhengfang(Model):
                             'room': room
                         }
                     )
-        return coursers
+        return courses
 
     @zhengfang_logined
     def get_score(self):
@@ -141,7 +141,7 @@ class Zhengfang(Model):
         获取课程成绩和绩点等信息
         :return: dict 
                 {'gpa': 4.99,  # GPA
-                    'coursers': [{
+                    'courses': [{
                         'year': '2015-2016',  # 修读学年
                         'semester': '1',  # 修读学期
                         'code': '00wk00003',  # 课程编号
@@ -173,14 +173,14 @@ class Zhengfang(Model):
         result = {'gpa': float(soup.select_one('#pjxfjd > b').text[7:])}
         cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minor_mark',
                 'make_up_score', 'retake_score', 'college', 'note', 'retake_mark', 'english_name']
-        coursers = []
+        courses = []
         for tr in soup.select('#Datagrid1  > tr')[1:]:
             courser = {}
             for col, td in zip(cols, tr.select('td')):
                 value = td.text.strip()
                 courser[col] = value
-            coursers.append(courser)
-        result['coursers'] = coursers
+            courses.append(courser)
+        result['courses'] = courses
         return result
 
     def login(self, account, password):

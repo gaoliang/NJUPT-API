@@ -28,7 +28,7 @@ class URL(object):
         return cls.ZHENGFANG_HOST + '/xsdjkscx.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121606'.format(account)
 
     @classmethod
-    def zhengfang_coursers(cls, account):
+    def zhengfang_courses(cls, account):
         return cls.ZHENGFANG_HOST + '/xsxkqk.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121615'.format(account)
 
     @classmethod

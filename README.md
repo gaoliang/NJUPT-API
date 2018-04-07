@@ -42,7 +42,7 @@ zhengfang = Zhengfang()
 ```python
 >>> zhengfang.get_score() 
     {'gpa': 4.99,
-    'coursers': [
+    'courses': [
         {
             'year': '2015-2016',  # 学年
             'semester': '1',  # 学期
@@ -84,7 +84,7 @@ zhengfang = Zhengfang()
 
 ### 获取全部课程
 ```python
->>> zhengfang.get_coursers()
+>>> zhengfang.get_courses()
     [{'class_end': 9,
       'class_start': 8,
       'day': 1,

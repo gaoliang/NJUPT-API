@@ -30,6 +30,6 @@ class ZhengfangTestCase(unittest.TestCase):
         zhengfang.login(account, right_password)
         self.assertIsNot(zhengfang.get_schedule(1), [[None for col in range(13)] for row in range(8)])
 
-    def test_get_coursers(self):
+    def test_get_courses(self):
         zhengfang = Zhengfang(account, right_password)
-        zhengfang.get_coursers()
+        zhengfang.get_courses()

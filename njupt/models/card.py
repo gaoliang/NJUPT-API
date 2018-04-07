@@ -2,9 +2,10 @@
 import base64
 import datetime
 import json
+import re
 
 from njupt.decorators.card_logined import card_logined
-from njupt.error import NjuptError
+from njupt.exceptions import NjuptException, AuthenticationException
 from njupt.models.base import Model
 from njupt.urls import URL
 from njupt.utils import CardCaptcha
@@ -53,6 +54,8 @@ class Card(Model):
         result['success'] = not result['code']
         if result['success']:
             self.verify = True
+        else:
+            raise AuthenticationException(result['msg'])
         return result
 
     def _login_execute(self, url=None, data=None):
@@ -111,7 +114,7 @@ class Card(Model):
         }
         result = self._url2json(url=URL.card_common(), data=data, method='post')
         result = json.loads(result['Msg'])
-        return float(result['query_net_info']['errmsg'][12:][:-1])
+        return float(re.search(r'余额(\d*\.\d*)元', result['query_net_info']['errmsg']).groups()[0])
 
     @card_logined
     def recharge(self, amount=0.01):
@@ -207,7 +210,7 @@ class Card(Model):
             return self._recharge_electricity(amount, elec_aid=AIDS['elec_xianlin'], building_id=buiding_id,
                                               building=building_name, room_id=room_id)
         except KeyError:
-            raise NjuptError("不存在的楼栋")
+            raise NjuptException("不存在的楼栋")
 
     @card_logined
     def recharge_sanpailou_elec(self, amount, building_name, room_id):
@@ -219,7 +222,7 @@ class Card(Model):
             return self._recharge_electricity(amount, elec_aid=AIDS['elec_sanpailou'], building_id=buiding_id,
                                               building=building_name, room_id=room_id)
         except KeyError:
-            raise NjuptError("不存在的楼栋")
+            raise NjuptException("不存在的楼栋")
 
     def _recharge_electricity(self, amount, elec_aid, building_id, building, room_id):
         data = {

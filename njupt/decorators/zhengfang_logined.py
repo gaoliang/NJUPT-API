@@ -7,7 +7,7 @@
 import requests
 import requests.utils
 
-from njupt.error import ZhengfangNotLogin
+from njupt.exceptions import UnauthorizedError
 from njupt.urls import URL
 
 
@@ -23,6 +23,6 @@ def zhengfang_logined(func):
                 if 'Object moved to ' not in r.text:
                     self.verify = True
                     return func(self, *args, **kwargs)
-            raise ZhengfangNotLogin
+            raise UnauthorizedError('未登录正方系统，请先登录')
 
     return wrapper

@@ -10,7 +10,7 @@ install_requires = open("requirements.txt").readlines()
 
 setup(
     name='njupt',
-    version='0.1',
+    version='0.1.1',
     platforms='any',
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     url='https://github.com/gaoliang/NJUPT-API',

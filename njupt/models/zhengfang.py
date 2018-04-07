@@ -3,6 +3,7 @@ import re
 
 from bs4 import BeautifulSoup
 
+from njupt.exceptions import AuthenticationException
 from njupt.decorators.zhengfang_logined import zhengfang_logined
 from njupt.models.base import Model
 from njupt.urls import URL
@@ -82,7 +83,7 @@ class Zhengfang(Model):
                         for courser in td.text.split('\n\n'):
                             info = courser.split()
                             start_week, end_week = map(int, week_re.search(info[1]).groups())
-                            courser_indexs = map(int, courser_indexs_re.search(info[1]).groups()[0].split(','))
+                            courser_index = map(int, courser_indexs_re.search(info[1]).groups()[0].split(','))
                             is_odd_week_only = "单周" in info[1]
                             is_even_week_only = "双周" in info[1]
                             week_day = chinese_rome[info[1][1]]
@@ -95,9 +96,44 @@ class Zhengfang(Model):
                                 if (week % 2 == 0 and is_odd_week_only) or (week % 2 == 1 and is_even_week_only):
                                     pass
                                 else:
-                                    for courser_index in courser_indexs:
+                                    for courser_index in courser_index:
                                         schedule[week_day][courser_index] = courser
         return schedule
+
+    @zhengfang_logined
+    def get_coursers(self):
+        """
+        获取这学期的选课情况
+        :return: 
+        
+        """
+        soup = self._url2soup(method='get', url=URL.zhengfang_coursers(self.account))
+        trs = soup.select('#DBGrid > tr')[1:]
+        coursers = []
+        for tr in trs:
+            tds = [node.text.strip() for node in tr.select('td')]
+            name = tds[2]
+            teacher = tds[5]
+            all_time = tds[8].split(';')
+            all_room = tds[9].split(';')
+            for time, room in zip(all_time, all_room):
+                if time and room:
+                    week_start, week_end = map(int, week_re.search(time).groups())
+                    courser_index = list(map(int, courser_indexs_re.search(time).groups()[0].split(',')))
+                    coursers.append(
+                        {
+                            'day': chinese_rome[time[1]],
+                            'name': name,
+                            'week': re.search('{(.*)}', time).groups()[0],
+                            'week_start': week_start,
+                            'week_end': week_end,
+                            'class_start': courser_index[0],
+                            'class_end': courser_index[-1],
+                            'teacher': teacher,
+                            'room': room
+                        }
+                    )
+        return coursers
 
     @zhengfang_logined
     def get_score(self):
@@ -172,6 +208,8 @@ class Zhengfang(Model):
         result['success'] = not result['code']
         if result['success']:
             self.verify = True
+        else:
+            raise AuthenticationException(result['msg'])
         return result
 
     def _login_execute(self, url=None, data=None):

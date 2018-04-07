@@ -5,26 +5,36 @@ NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简�
 
 项目结构受到了开源项目 [zhihu-api](https://github.com/lzjun567/zhihu-api)的启发，在这里对作者[@lzjun567](https://github.com/lzjun567/)表示感谢
 
-欢迎pr
 
 # 安装
 ```bash
-pip3 install njupt
+pipenv install njupt # or pip install njupt
+✨🍰✨
 # 仅支持python3
 ```
 # 目前实现的功能
+[正方系统](#正方系统)
+- [登录正方](#登录正方)
+- [获取课程成绩和绩点](#获取课程成绩和绩点)
+- [获取等级考试信息](#获取等级考试信息)
+- [获取全部课程](#获取全部课程)
+- [获取课表](#获取课表)
+
+[校园卡系统](#校园卡系统)
+- [登录校园卡](#登录校园卡)
+- [获取校园卡余额](#获取校园卡余额)
+- [充值校园卡](#充值校园卡)
+- [获取账单](#获取账单)
+- [获取网费余额](#获取网费余额)
+- [充值网费](#充值网费)
+- [充值寝室电费](#充值寝室电费)
 ## 正方系统
 
-### 登录
+### 登录正方
 ```python
 from njupt import Zhengfang
 zhengfang = Zhengfang()
->> zhengfang.login(account='B1xxxxxxx',password='password')
-    {
-        'success':True,
-        'code':0,
-        'msg':'登录成功'
-    }
+>>> zhengfang.login(account='B1xxxxxxx',password='password')
 # or zhengfang = Zhengfang('B1xxxxxxx','password')
 
 ```
@@ -32,24 +42,26 @@ zhengfang = Zhengfang()
 ```python
 >>> zhengfang.get_score() 
     {'gpa': 4.99,
-    'coursers': [{
-        'year': '2015-2016', # 学年
-        'semester': '1', # 学期
-        'code': '00wk00003', # 课程代码
-        'name': '从"愚昧"到"科学"-科学技术简史', # 课程名称
-        'attribute': '任选', # 课程性质
-        'belong': '全校任选课', # 课程归属
-        'credit': '2.0', # 学分
-        'point': '', # 绩点
-        'score': '81', # 成绩
-        'minor_mark': '0', # 辅修标记
-        'make_up_score': '', # 辅修标记
-        'retake_score': '', # 重修成绩 
-        'college': '网络课程', # 开课学院
-        'note': '', # 备注 
-        'retake_mark': '0', # 重修标记
-        'english_name': '' # 英文名称
+    'coursers': [
+        {
+            'year': '2015-2016',  # 学年
+            'semester': '1',  # 学期
+            'code': '00wk00003',  # 课程代码
+            'name': '从"愚昧"到"科学"-科学技术简史',  # 课程名称
+            'attribute': '任选',  # 课程性质
+            'belong': '全校任选课',  # 课程归属
+            'credit': '2.0',  # 学分
+            'point': '',  # 绩点
+            'score': '81',  # 成绩
+            'minor_mark': '0',  # 辅修标记
+            'make_up_score': '',  # 辅修标记
+            'retake_score': '',  # 重修成绩 
+            'college': '网络课程',  # 开课学院
+            'note': '',  # 备注 
+            'retake_mark': '0',  # 重修标记
+            'english_name': ''  # 英文名称
         }, 
+        ...
         ]
     }
 ```
@@ -69,6 +81,35 @@ zhengfang = Zhengfang()
         ...
     ]
 ```
+
+### 获取全部课程
+```python
+>>> zhengfang.get_coursers()
+    [{'class_end': 9,
+      'class_start': 8,
+      'day': 1,
+      'name': '市场营销',
+      'room': '教4－101',
+      'teacher': '王波(男)',
+      'week': '第1-15周|单周',
+      'week_end': 15,
+      'week_start': 1
+      },
+     {
+      'class_end': 9,
+      'class_start': 8,
+      'day': 3,
+      'name': '市场营销',
+      'room': '教4－101',
+      'teacher': '王波(男)',
+      'week': '第1-16周',
+      'week_end': 16,
+      'week_start': 1
+      },
+      ...
+    ]
+```
+
 ### 获取课表
 ```python
 >>> zhengfang.get_schedule(week=1)
@@ -89,26 +130,20 @@ zhengfang = Zhengfang()
         ...
     ]
 
-
-
 ```
+
+
 
 ## 校园卡系统
-### 登录
+### 登录校园卡
 ```python
-
 from njupt import Card
->>> card = Card(account='11020xxxxxxxxxx',password='passwd')
-    {
-        'success': True,
-        'code': 0, 
-        'msg': '登录成功'
-    }
-
-# or card = Card(), card.login(account,password)
+>>> card = Card()
+>>> card.login(account='11020xxxxxxxxxx',password='passwd')
+# or card = Card(account,password)
 ```
 
-### 获取余额
+### 获取校园卡余额
 ```python
 >>> card.get_balance()
     {
@@ -117,7 +152,7 @@ from njupt import Card
         'total': 10.02  # 总余额
     }
 ```
-### 充值(绑定银行卡 -> 校园卡)
+### 充值校园卡
 ```python
 >>> card.recharge(amount=2.33)
     {   
@@ -153,7 +188,7 @@ from njupt import Card
     }
 ```
 
-### 获取Dr.com的网费余额
+### 获取网费余额
 ```python
 >>> card.get_net_balance()
     2.33
@@ -165,7 +200,7 @@ from njupt import Card
     {
         'success': True, 
         'code' : 0,
-        'Msg' : '充值成功'
+        'Msg' : '缴费成功！'
     }
 ```
 ### 充值寝室电费

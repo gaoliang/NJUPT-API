@@ -70,6 +70,8 @@ class Model(requests.Session):
         """
         try:  # 出现网络连接问题,直接在该处抛出错误
             r = getattr(self, method)(url, json=json, data=data, params=params, **kwargs)
+            if r.encoding=="gb2312":
+                r.encoding="gbk"
         except ConnectionError:
             raise ConnectionError("请检查网络连接")
         else:

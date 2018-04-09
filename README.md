@@ -92,6 +92,7 @@ zhengfang = Zhengfang()
       'room': '教4－101',
       'teacher': '王波(男)',
       'week': '第1-15周|单周',
+      'interval': 2,
       'week_end': 15,
       'week_start': 1
       },
@@ -103,6 +104,7 @@ zhengfang = Zhengfang()
       'room': '教4－101',
       'teacher': '王波(男)',
       'week': '第1-16周',
+      'interval': 1,
       'week_end': 16,
       'week_start': 1
       },

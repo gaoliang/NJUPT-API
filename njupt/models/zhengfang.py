@@ -120,17 +120,23 @@ class Zhengfang(Model):
                 if time and room:
                     week_start, week_end = map(int, week_re.search(time).groups())
                     courser_index = list(map(int, courser_indexs_re.search(time).groups()[0].split(',')))
+                    week = re.search('{(.*)}', time).groups()[0]
+                    if '双周' in week and week_start % 2 == 1:
+                        week_start +=1
+                    if '单周' in week and week_start % 2 == 0:
+                        week_start +=1
                     courses.append(
                         {
                             'day': chinese_rome[time[1]],
                             'name': name,
-                            'week': re.search('{(.*)}', time).groups()[0],
+                            'week': week,
                             'week_start': week_start,
                             'week_end': week_end,
                             'class_start': courser_index[0],
                             'class_end': courser_index[-1],
                             'teacher': teacher,
-                            'room': room
+                            'room': room,
+                            'interval': 2 if '单周' in week or '双周' in week else 1,
                         }
                     )
         return courses

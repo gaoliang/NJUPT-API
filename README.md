@@ -5,14 +5,16 @@ NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简�
 
 项目结构受到了开源项目 [zhihu-api](https://github.com/lzjun567/zhihu-api)的启发，在这里对作者[@lzjun567](https://github.com/lzjun567/)表示感谢
 
+## 谁在使用？
+- [NJUPT-iCal](https://github.com/shaoye/NJUPT-iCal) : 生成课表ics文件并导入系统日历
 
-# 安装
+## 安装
 ```bash
 pipenv install njupt # or pip install njupt
 ✨🍰✨
 # 仅支持python3
 ```
-# 目前实现的功能
+## 目前实现的功能
 [正方系统](#正方系统)
 - [登录正方](#登录正方)
 - [获取课程成绩和绩点](#获取课程成绩和绩点)
@@ -28,9 +30,9 @@ pipenv install njupt # or pip install njupt
 - [获取网费余额](#获取网费余额)
 - [充值网费](#充值网费)
 - [充值寝室电费](#充值寝室电费)
-## 正方系统
+### 正方系统
 
-### 登录正方
+#### 登录正方
 ```python
 from njupt import Zhengfang
 zhengfang = Zhengfang()
@@ -38,7 +40,7 @@ zhengfang = Zhengfang()
 # or zhengfang = Zhengfang('B1xxxxxxx','password')
 
 ```
-### 获取课程成绩和绩点
+#### 获取课程成绩和绩点
 ```python
 >>> zhengfang.get_score() 
     {'gpa': 4.99,
@@ -66,7 +68,7 @@ zhengfang = Zhengfang()
     }
 ```
 
-### 获取等级考试信息
+#### 获取等级考试信息
 ```python
 >>> zhengfang.get_grade() 
     [
@@ -82,7 +84,7 @@ zhengfang = Zhengfang()
     ]
 ```
 
-### 获取全部课程
+#### 获取全部课程
 ```python
 >>> zhengfang.get_courses()
     [{'class_end': 9,
@@ -112,7 +114,7 @@ zhengfang = Zhengfang()
     ]
 ```
 
-### 获取课表
+#### 获取课表
 ```python
 >>> zhengfang.get_schedule(week=1)
     # 二维列表，[i][j] 代表周i第j节课的课程。 为了方便，i或j为零0的单元均不使用。
@@ -136,8 +138,8 @@ zhengfang = Zhengfang()
 
 
 
-## 校园卡系统
-### 登录校园卡
+### 校园卡系统
+#### 登录校园卡
 ```python
 from njupt import Card
 >>> card = Card()
@@ -145,7 +147,7 @@ from njupt import Card
 # or card = Card(account,password)
 ```
 
-### 获取校园卡余额
+#### 获取校园卡余额
 ```python
 >>> card.get_balance()
     {
@@ -154,7 +156,7 @@ from njupt import Card
         'total': 10.02  # 总余额
     }
 ```
-### 充值校园卡
+#### 充值校园卡
 ```python
 >>> card.recharge(amount=2.33)
     {   
@@ -163,7 +165,7 @@ from njupt import Card
         'msg': '转账成功'  # 附加信息
     }
 ```
-### 获取账单
+#### 获取账单
 ```python
 >>> card.get_bill(start_date='2017-02-33',end_date='2018-01-03',rows=30,page=1)
     {'recodes': 
@@ -190,13 +192,13 @@ from njupt import Card
     }
 ```
 
-### 获取网费余额
+#### 获取网费余额
 ```python
 >>> card.get_net_balance()
     2.33
 ```
 
-### 充值网费
+#### 充值网费
 ```python
 >>> card.recharge_net(amount=2.33)
     {
@@ -205,7 +207,7 @@ from njupt import Card
         'Msg' : '缴费成功！'
     }
 ```
-### 充值寝室电费
+#### 充值寝室电费
 ```python
 >>> card.recharge_xianlin_elec(amount=2.33,building_name='兰苑11栋',room_id='4031')
     {
@@ -217,6 +219,6 @@ from njupt import Card
 ```
 
 
-# todos
+## todos
 
 图书馆系统和奥兰系统的常用接口

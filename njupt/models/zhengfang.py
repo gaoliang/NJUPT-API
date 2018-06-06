@@ -44,7 +44,7 @@ class Zhengfang(Model):
                      },
                 ]
         """
-        soup = self._url2soup(method='get', url=URL.zhengfang_grade(self.account))
+        soup = self.get_soup(method='get', url=URL.zhengfang_grade(self.account))
         results = []
         for tr in soup.select("#DataGrid1 > tr")[1:]:
             names = ['year', 'semester', 'name', 'number', 'date', 'score']
@@ -107,7 +107,7 @@ class Zhengfang(Model):
         :return: 
         
         """
-        soup = self._url2soup(method='get', url=URL.zhengfang_courses(self.account))
+        soup = self.get_soup(method='get', url=URL.zhengfang_courses(self.account))
         trs = soup.select('#DBGrid > tr')[1:]
         courses = []
         for tr in trs:
@@ -175,7 +175,7 @@ class Zhengfang(Model):
             '__VIEWSTATE': viewstate,
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
-        soup = self._url2soup(method='post', url=URL.zhengfang_score(self.account), data=data)
+        soup = self.get_soup(method='post', url=URL.zhengfang_score(self.account), data=data)
         result = {'gpa': float(soup.select_one('#pjxfjd > b').text[7:])}
         cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minor_mark',
                 'make_up_score', 'retake_score', 'college', 'note', 'retake_mark', 'english_name']
@@ -196,7 +196,7 @@ class Zhengfang(Model):
         :param password: 密码
         :return: {'code': 1, "msg": "登录失败"} 或 {'code': 0, 'msg': '登录成功'}
         """
-        captcha_code = ZhengfangCaptcha(self._url2image(URL.zhengfang_captcha())).crack()
+        captcha_code = ZhengfangCaptcha(self.get_image(URL.zhengfang_captcha())).crack()
         data = {
             "__VIEWSTATE": self._get_viewstate(URL.zhengfang_login()),
             'txtUserName': account,

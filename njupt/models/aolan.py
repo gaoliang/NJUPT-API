@@ -14,7 +14,7 @@ class Aolan(Model):
         :param password: 密码
         :return: {'r': 1, "msg": "登录失败"} 或 {'r': 0, 'msg': '登录成功'}
         """
-        captcha_code = AolanCaptcha(self._url2image(URL.aolan_captcha())).crack()
+        captcha_code = AolanCaptcha(self.get_image(URL.aolan_captcha())).crack()
         data = {
             "__VIEWSTATE": self._get_viewstate(URL.aolan_login()),
             '__VIEWSTATEGENERATOR': captcha_code,

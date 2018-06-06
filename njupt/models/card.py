@@ -36,7 +36,7 @@ class Card(Model):
         :param str password: 校园卡查询密码
         :return: {'code': 1, "msg": "登录失败，请重试"} 或 {'code': 0, 'msg': '登录成功'}
         """
-        captcha_code = CardCaptcha(self._url2image(URL.card_captcha())).crack()
+        captcha_code = CardCaptcha(self.get_image(URL.card_captcha())).crack()
         data = {
             "sno": account,
             "pwd": base64.b64encode(str(password).encode("utf8")),
@@ -59,7 +59,7 @@ class Card(Model):
         return result
 
     def _login_execute(self, url=None, data=None):
-        result = self._url2json(url=url, data=data, method="post")
+        result = self.get_json(url=url, data=data, method="post")
         if result['IsSucceed']:
             return {'code': 0, 'msg': '登录成功'}
         else:
@@ -74,7 +74,7 @@ class Card(Model):
         :return: 校园卡号对应的系统内部账号 
         """
         if not self.inner_account:
-            info = self._url2json(URL.card_info(), method='post', data={'json': True})
+            info = self.get_json(URL.card_info(), method='post', data={'json': True})
             result = json.loads(info['Msg'])
             self.inner_account = result['query_card']['card'][0]['account']
         return self.inner_account
@@ -90,7 +90,7 @@ class Card(Model):
                     'total': 10.02  # 总余额
                 }
         """
-        info = self._url2json(URL.card_info(), method='post', data={'json': True})
+        info = self.get_json(URL.card_info(), method='post', data={'json': True})
         result = json.loads(info['Msg'])
         balance = int(result['query_card']['card'][0]['db_balance']) / 100  # 到账余额
         unsettle_balance = int(result['query_card']['card'][0]['unsettle_amount']) / 100  # 过渡余额
@@ -112,7 +112,7 @@ class Card(Model):
             'funname': 'synjones.onecard.query.net.info',
             'json': True,
         }
-        result = self._url2json(url=URL.card_common(), data=data, method='post')
+        result = self.get_json(url=URL.card_common(), data=data, method='post')
         result = json.loads(result['Msg'])
         return float(re.search(r'余额(\d*\.\d*)元', result['query_net_info']['errmsg']).groups()[0])
 
@@ -138,7 +138,7 @@ class Card(Model):
             'client_type': 'web',
             'json': True,
         }
-        info = self._url2json(URL.card_recharge(), 'post', data)
+        info = self.get_json(URL.card_recharge(), 'post', data)
         info = json.loads(info['Msg'])['transfer']
         result = {
             'code': int(info['retcode']),
@@ -172,7 +172,7 @@ class Card(Model):
             'qpwd': '',
             'json': True
         }
-        result = self._url2json(url=URL.card_net_pay(), method='post', data=data)
+        result = self.get_json(url=URL.card_net_pay(), method='post', data=data)
         result = json.loads(result['Msg'])
         return {
             'success': not int(result['pay_net_gdc']['retcode']),
@@ -188,7 +188,7 @@ class Card(Model):
             'funname': 'synjones.onecard.query.elec.building',
             'json': True,
         }
-        result = self._url2json(data=data, url=URL.card_common(), method='post')
+        result = self.get_json(data=data, url=URL.card_common(), method='post')
         result = json.loads(result['Msg'])
         # - -!
         building_id = {}
@@ -207,7 +207,7 @@ class Card(Model):
         """
         try:
             buiding_id = self._get_build_ids(AIDS['elec_xianlin'])[building_name]
-            return self._recharge_electricity(amount, elec_aid=AIDS['elec_xianlin'], building_id=buiding_id,
+            return self._recharge_electricity(amount=amount, elec_aid=AIDS['elec_xianlin'], building_id=buiding_id,
                                               building=building_name, room_id=room_id)
         except KeyError:
             raise NjuptException("不存在的楼栋")
@@ -219,7 +219,7 @@ class Card(Model):
         """
         try:
             buiding_id = self._get_build_ids(AIDS['elec_sanpailou'])[building_name]
-            return self._recharge_electricity(amount, elec_aid=AIDS['elec_sanpailou'], building_id=buiding_id,
+            return self._recharge_electricity(amount=amount, elec_aid=AIDS['elec_sanpailou'], building_id=buiding_id,
                                               building=building_name, room_id=room_id)
         except KeyError:
             raise NjuptException("不存在的楼栋")
@@ -242,7 +242,7 @@ class Card(Model):
             "json": True
         }
 
-        r = json.loads(self._url2json(URL.card_elec_pay(), 'post', data=data)['Msg'])
+        r = json.loads(self.get_json(URL.card_elec_pay(), 'post', data=data)['Msg'])
         return {
             'success': not bool(int(r['pay_elec_gdc']['retcode'])),
             'code': int(r['pay_elec_gdc']['retcode']),
@@ -287,7 +287,7 @@ class Card(Model):
             "page": page,
             "rows": rows
         }
-        temp = self._url2json(url=URL.card_bill(), method="post", data=data)
+        temp = self.get_json(url=URL.card_bill(), method="post", data=data)
         result = {'total': temp['total'], 'recodes': [], 'total_pages': temp['total'] // rows + 1, 'page': page}
         if temp['rows']:
             for row in temp['rows']:
@@ -301,7 +301,3 @@ class Card(Model):
                     'type': row['TRANNAME'].strip(),
                 })
         return result
-
-
-if __name__ == "__main__":
-    pass

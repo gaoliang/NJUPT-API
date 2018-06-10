@@ -8,6 +8,7 @@ name = "tsinghua"
 lxml = "*"
 pillow = "*"
 requests = "*"
+pytz = "*"
 
 [dev-packages]
 "autopep8" = "*"

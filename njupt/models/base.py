@@ -57,13 +57,11 @@ class Model(requests.Session):
         """
         try:  # 出现网络连接问题,直接在该处抛出错误
             r = getattr(self, method)(url, json=json, data=data, params=params, **kwargs)
-            if r.encoding == "gb2312":
-                r.encoding = "gbk"
         except ConnectionError:
             raise ConnectionError("请检查网络连接")
         else:
             if r.ok:  # 状态码小于400为True
-                soup = BeautifulSoup(r.text, 'lxml')
+                soup = BeautifulSoup(r.content, 'lxml')
                 return soup
             else:  # 处理其他状态码
                 raise Exception('请确保能够正常访问当前页面: {}'.format(url))

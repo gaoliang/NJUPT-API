@@ -14,4 +14,4 @@ class AuthenticationException(NjuptException):
 
 
 class UnauthorizedError(NjuptException):
-    """Not Unauthorized Error"""
+    """Not authorized Error"""

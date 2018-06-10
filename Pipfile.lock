@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "27497fe9c5052ba7161a4c33ae8dba096f676cf5be1982c4b3ea7ceac847d70a"
+            "sha256": "6e2acd01e40c4eb93af68abc80a68d1a6167d8e782d414f5759cc123b8b9ed3a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -112,6 +112,14 @@
             ],
             "index": "tsinghua",
             "version": "==5.1.0"
+        },
+        "pytz": {
+            "hashes": [
+                "sha256:65ae0c8101309c45772196b21b74c46b2e5d11b6275c45d251b150d5da334555",
+                "sha256:c06425302f2cf668f1bba7a0a03f3c1d34d4ebeef2c72003da308b3947c7f749"
+            ],
+            "index": "tsinghua",
+            "version": "==2018.4"
         },
         "requests": {
             "hashes": [
@@ -258,7 +266,6 @@
         },
         "pycodestyle": {
             "hashes": [
-                "sha256:74abc4e221d393ea5ce1f129ea6903209940c1ecd29e002e8c6933c2b21026e0",
                 "sha256:cbc619d09254895b0d12c2c691e237b2e91e9b2ecf5e84c26b35400f93dcfb83",
                 "sha256:cbfca99bd594a10f674d0cd97a3d802a1fdef635d4361e1a2658de47ed261e3a"
             ],

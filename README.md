@@ -4,16 +4,21 @@
 NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简洁、优雅的、Pythonic的API接口，以便用户能够在此基础上进行扩展开发。
 
 ## 谁在使用？
+
 - [NJUPT-iCal](https://github.com/shaoye/NJUPT-iCal) : 生成课表ics文件并导入系统日历
 
 ## 安装
+
 ```bash
 pipenv install njupt # or pip install njupt
 ✨🍰✨
 # 仅支持python3
 ```
+
 ## 目前实现的功能
+
 [正方系统](#正方系统)
+
 - [登录正方](#登录正方)
 - [获取课程成绩和绩点](#获取课程成绩和绩点)
 - [获取等级考试信息](#获取等级考试信息)
@@ -21,6 +26,7 @@ pipenv install njupt # or pip install njupt
 - [获取课表](#获取课表)
 
 [校园卡系统](#校园卡系统)
+
 - [登录校园卡](#登录校园卡)
 - [获取校园卡余额](#获取校园卡余额)
 - [充值校园卡](#充值校园卡)
@@ -28,9 +34,11 @@ pipenv install njupt # or pip install njupt
 - [获取网费余额](#获取网费余额)
 - [充值网费](#充值网费)
 - [充值寝室电费](#充值寝室电费)
+
 ### 正方系统
 
 #### 登录正方
+
 ```python
 from njupt import Zhengfang
 zhengfang = Zhengfang()
@@ -38,9 +46,11 @@ zhengfang = Zhengfang()
 # or zhengfang = Zhengfang('B1xxxxxxx','password')
 
 ```
+
 #### 获取课程成绩和绩点
+
 ```python
->>> zhengfang.get_score() 
+>>> zhengfang.get_score()
     {'gpa': 4.99,
     'courses': [
         {
@@ -55,20 +65,21 @@ zhengfang = Zhengfang()
             'score': '81',  # 成绩
             'minor_mark': '0',  # 辅修标记
             'make_up_score': '',  # 辅修标记
-            'retake_score': '',  # 重修成绩 
+            'retake_score': '',  # 重修成绩
             'college': '网络课程',  # 开课学院
-            'note': '',  # 备注 
+            'note': '',  # 备注
             'retake_mark': '0',  # 重修标记
             'english_name': ''  # 英文名称
-        }, 
+        },
         ...
         ]
     }
 ```
 
 #### 获取等级考试信息
+
 ```python
->>> zhengfang.get_grade() 
+>>> zhengfang.get_grade()
     [
         {
         'date': '20151219',
@@ -83,7 +94,9 @@ zhengfang = Zhengfang()
 ```
 
 #### 获取全部课程
+
 ```python
+
 >>> zhengfang.get_courses()
     [{'class_end': 9,
       'class_start': 8,
@@ -113,6 +126,7 @@ zhengfang = Zhengfang()
 ```
 
 #### 获取课表
+
 ```python
 >>> zhengfang.get_schedule(week=1)
     # 二维列表，[i][j] 代表周i第j节课的课程。 为了方便，i或j为零0的单元均不使用。
@@ -123,8 +137,8 @@ zhengfang = Zhengfang()
         [],
         [   None,
             {
-            'classroom': '教4－202', 
-            'name': '技术经济学', 
+            'classroom': '教4－202',
+            'name': '技术经济学',
             'teacher': '储成祥'
             },
             ...
@@ -134,10 +148,10 @@ zhengfang = Zhengfang()
 
 ```
 
-
-
 ### 校园卡系统
+
 #### 登录校园卡
+
 ```python
 from njupt import Card
 >>> card = Card()
@@ -146,6 +160,7 @@ from njupt import Card
 ```
 
 #### 获取校园卡余额
+
 ```python
 >>> card.get_balance()
     {
@@ -154,19 +169,23 @@ from njupt import Card
         'total': 10.02  # 总余额
     }
 ```
+
 #### 充值校园卡
+
 ```python
 >>> card.recharge(amount=2.33)
-    {   
+    {
         'success':True,  # 转账是否成功
         'code': 0,  # 状态码
         'msg': '转账成功'  # 附加信息
     }
 ```
+
 #### 获取账单
+
 ```python
 >>> card.get_bill(start_date='2017-02-33',end_date='2018-01-03',rows=30,page=1)
-    {'recodes': 
+    {'recodes':
         [
             {'balances': 39.71, # 余额
               'change': -5, # 变动
@@ -182,7 +201,7 @@ from njupt import Card
               'time': '2018-01-24 17:09:36',
               'type': '持卡人消费',
               'week': '星期三'},
-               ... 
+               ...
         ],
     'total': 52, # 总的记录数
     'total_pages':2,  # 总页数
@@ -191,31 +210,34 @@ from njupt import Card
 ```
 
 #### 获取网费余额
+
 ```python
 >>> card.get_net_balance()
     2.33
 ```
 
 #### 充值网费
+
 ```python
 >>> card.recharge_net(amount=2.33)
     {
-        'success': True, 
+        'success': True,
         'code' : 0,
         'Msg' : '缴费成功！'
     }
 ```
+
 #### 充值寝室电费
+
 ```python
 >>> card.recharge_xianlin_elec(amount=2.33,building_name='兰苑11栋',room_id='4031')
     {
-        'success': True, 
+        'success': True,
         'code' : 0,
         'Msg' : '缴费成功！'
     }
     # 三牌楼校区为card.recharge_sanpailou_elec()，参数相同（未测试）
 ```
-
 
 ## todos
 

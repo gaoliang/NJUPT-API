@@ -176,7 +176,7 @@ class Zhengfang(Model):
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
         soup = self.get_soup(method='post', url=URL.zhengfang_score(self.account), data=data)
-        result = {'gpa': float(soup.select_one('#pjxfjd > b').text[7:])}
+        result = {'gpa': float(soup.select_one('#pjxfjd').text[7:])}
         cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minor_mark',
                 'make_up_score', 'retake_score', 'college', 'note', 'retake_mark', 'english_name']
         courses = []

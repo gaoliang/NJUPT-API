@@ -3,11 +3,11 @@ import re
 
 from bs4 import BeautifulSoup
 
-from njupt.exceptions import AuthenticationException
+from njupt.exceptions import AuthenticationException, TemporaryBannedException
 from njupt.decorators.zhengfang_logined import zhengfang_logined
 from njupt.models.base import Model
 from njupt.urls import URL
-from njupt.utils import ZhengfangCaptcha
+from njupt.utils import ZhengfangCaptcha, zhengfang_table_to_list
 
 week_re = re.compile(r'第(\d+)-(\d+)周')
 courser_indexs_re = re.compile(r'第(\d+(?:,\d+)*)节')
@@ -122,9 +122,9 @@ class Zhengfang(Model):
                     courser_index = list(map(int, courser_indexs_re.search(time).groups()[0].split(',')))
                     week = re.search('{(.*)}', time).groups()[0]
                     if '双周' in week and week_start % 2 == 1:
-                        week_start +=1
+                        week_start += 1
                     if '单周' in week and week_start % 2 == 0:
-                        week_start +=1
+                        week_start += 1
                     courses.append(
                         {
                             'day': chinese_rome[time[1]],
@@ -218,6 +218,24 @@ class Zhengfang(Model):
             raise AuthenticationException(result['msg'])
         return result
 
+    @zhengfang_logined
+    def list_optional_courses(self):
+        """
+        获取可选的课程列表，对应： 教务系统 -> 网上选课 -> 学生选课
+        :rtype: list[dict]
+        :return: 包含可选课程信息的list
+        """
+
+        soup = self.get_soup(URL.zhengfang_list_optional_courses(self.account))
+        if len(str(soup)) < 100:
+            raise TemporaryBannedException('选课三秒防刷')
+        trs = soup.select('#kcmcgrid > tr')
+        result = zhengfang_table_to_list(trs, remove_index_list=[8], index_cast_dict={
+            4: int,
+            9: int
+        })
+        return result
+
     def _login_execute(self, url=None, data=None):
         r = self.post(url=url, data=data)
         if r.ok:
@@ -235,7 +253,3 @@ class Zhengfang(Model):
                 return {'code': 3, 'msg': '未知错误'}
         else:
             return {'code': 1, "msg": "登录失败"}
-
-
-if __name__ == "__main__":
-    pass

@@ -1,16 +1,17 @@
 # encoding: utf-8
 import re
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from njupt.exceptions import AuthenticationException, TemporaryBannedException
 from njupt.decorators.zhengfang_logined import zhengfang_logined
+from njupt.exceptions import AuthenticationException, TemporaryBannedException
 from njupt.models.base import Model
 from njupt.urls import URL
-from njupt.utils import ZhengfangCaptcha, zhengfang_table_to_list
+from njupt.utils import ZhengfangCaptcha, table_to_list, table_to_dict
 
 week_re = re.compile(r'第(\d+)-(\d+)周')
-courser_indexs_re = re.compile(r'第(\d+(?:,\d+)*)节')
+courser_index_re = re.compile(r'第(\d+(?:,\d+)*)节')
 chinese_rome = {
     '一': 1,
     '二': 2,
@@ -30,29 +31,34 @@ class Zhengfang(Model):
             self.login(account, password)
 
     @zhengfang_logined
-    def get_grade(self):
-        """
-        获取等级考试成绩信息
-        :return: list
-                [
-                    {'date': '20151219',  # 考试日期
-                     'name': '全国大学英语四级考试',  # 考试名称
-                     'number': '320082152113313',  # 准考证号
-                     'score': '547',  # 成绩
-                     'semester': '1',  # 学期
-                     'year': '2015-2016'  # 学年
-                     },
-                ]
+    def list_exam_grades(self):
+        """ 获取等级考试成绩信息
+        :rtype list[dict]
+        :return 返回元素为等级考试信息字典的列表
         """
         soup = self.get_soup(method='get', url=URL.zhengfang_grade(self.account))
-        results = []
-        for tr in soup.select("#DataGrid1 > tr")[1:]:
-            names = ['year', 'semester', 'name', 'number', 'date', 'score']
-            result = {}
-            for name, td in zip(names, tr.select('td')[:6]):
-                result[name] = td.text
-            results.append(result)
-        return results
+        table = soup.select_one('#DataGrid1')
+        result = table_to_list(table, index_cast_dict={
+            1: int,
+            4: lambda x: datetime.strptime(x, '%Y%m%d')
+        })
+        return result
+
+    @zhengfang_logined
+    def get_gpa(self):
+        """
+        获取GPA
+        :rtype int
+        """
+        view_state = self._get_viewstate(url=URL.zhengfang_score(self.account))
+        data = {
+            'ddlXN': '',
+            'ddlXQ': '',
+            '__VIEWSTATE': view_state,
+            'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
+        }
+        soup = self.get_soup(method='post', url=URL.zhengfang_score(self.account), data=data)
+        return float(soup.select_one('#pjxfjd').text[7:])
 
     @zhengfang_logined
     def get_schedule(self, week, year=None, semester=None):
@@ -64,8 +70,8 @@ class Zhengfang(Model):
         :return: 二维列表schedule，schedule[i][j]代表周i第j节课的课程。 为了方便，i或j为零0的单元均不使用。
                 列表的元素为None，代表没有课程，或描述课程信息的dict，dict例如
                 {
-                    'classroom': '教4－202', 
-                    'name': '技术经济学', 
+                    'classroom': '教4－202',
+                    'name': '技术经济学',
                     'teacher': '储成祥'
                 }
         """
@@ -83,7 +89,7 @@ class Zhengfang(Model):
                         for courser in td.text.split('\n\n'):
                             info = courser.split()
                             start_week, end_week = map(int, week_re.search(info[1]).groups())
-                            courser_index = map(int, courser_indexs_re.search(info[1]).groups()[0].split(','))
+                            courser_index = map(int, courser_index_re.search(info[1]).groups()[0].split(','))
                             is_odd_week_only = "单周" in info[1]
                             is_even_week_only = "双周" in info[1]
                             week_day = chinese_rome[info[1][1]]
@@ -104,8 +110,7 @@ class Zhengfang(Model):
     def get_courses(self):
         """
         获取这学期的选课情况
-        :return: 
-        
+        :rtype list[dict]
         """
         soup = self.get_soup(method='get', url=URL.zhengfang_courses(self.account))
         trs = soup.select('#DBGrid > tr')[1:]
@@ -119,7 +124,7 @@ class Zhengfang(Model):
             for time, room in zip(all_time, all_room):
                 if time and room:
                     week_start, week_end = map(int, week_re.search(time).groups())
-                    courser_index = list(map(int, courser_indexs_re.search(time).groups()[0].split(',')))
+                    courser_index = list(map(int, courser_index_re.search(time).groups()[0].split(',')))
                     week = re.search('{(.*)}', time).groups()[0]
                     if '双周' in week and week_start % 2 == 1:
                         week_start += 1
@@ -142,31 +147,11 @@ class Zhengfang(Model):
         return courses
 
     @zhengfang_logined
-    def get_score(self):
+    def list_exam_scores(self):
         """
-        获取课程成绩和绩点等信息
-        :return: dict 
-                {'gpa': 4.99,  # GPA
-                    'courses': [{
-                        'year': '2015-2016',  # 修读学年
-                        'semester': '1',  # 修读学期
-                        'code': '00wk00003',  # 课程编号
-                        'name': '从"愚昧"到"科学"-科学技术简史',  # 课程中文名
-                        'attribute': '任选',  # 课程性质
-                        'belong': '全校任选课',  # 课程归属
-                        'credit': '2.0',  # 学分
-                        'point': '',  # 绩点
-                        'score': '81',  # 成绩
-                        'minorMark': '0',  # 重修标记
-                        'make_up_score': '',  # 补考成绩
-                        'retake_score': '',  # 重修成绩
-                        'college': '网络课程',  # 开课学院
-                        'note': '',  # 备注
-                        'retake_mark': '0', # 重修标记
-                        'english_name': ''  # 课程英文名
-                        }, 
-                    ]
-                }
+        获取参加过的考试的成绩列表
+        :rtype list[dict]
+        :return 返回一个包含考试成绩信息字典的列表, 注意是所有参加过的考试
         """
         viewstate = self._get_viewstate(url=URL.zhengfang_score(self.account))
         data = {
@@ -176,22 +161,43 @@ class Zhengfang(Model):
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
         soup = self.get_soup(method='post', url=URL.zhengfang_score(self.account), data=data)
-        result = {'gpa': float(soup.select_one('#pjxfjd').text[7:])}
-        cols = ['year', 'semester', 'code', 'name', 'attribute', 'belong', 'credit', 'point', 'score', 'minor_mark',
-                'make_up_score', 'retake_score', 'college', 'note', 'retake_mark', 'english_name']
-        courses = []
-        for tr in soup.select('#Datagrid1  > tr')[1:]:
-            courser = {}
-            for col, td in zip(cols, tr.select('td')):
-                value = td.text.strip()
-                courser[col] = value
-            courses.append(courser)
-        result['courses'] = courses
-        return result
+        table = soup.select_one('#Datagrid1')
+        return table_to_list(table, index_cast_dict={
+            1: int,
+            6: float,
+            7: lambda x: float(x) if x else None,
+            8: lambda x: float(x) if x.isdigit() else x
+        })
+
+    @zhengfang_logined
+    def list_optional_courses(self):
+        """获取可选课程列表，对应于教务系统 -> 网上选课 -> 学生选课
+        :rtype list[dict]
+        :return 可选课程信息列表
+        """
+        soup = self.get_soup(URL.zhengfang_list_optional_courses(self.account))
+        if len(str(soup)) < 100:
+            raise TemporaryBannedException('选课三秒防刷')
+        table = soup.select_one('#kcmcgrid')
+        result = table_to_list(table, remove_index_list=[8], index_cast_dict={
+            4: int,
+            9: int
+        })
+        return result[:-1]  # 最后多了一个空行
+
+    @zhengfang_logined
+    def get_course_info(self, courser_code):
+        """
+        获取课程的简介信息
+        :param courser_code: 课程代码
+        :rtype: dict
+        """
+        soup = self.get_soup(URL.zhengfang_get_course_info(account=self.account, course_code=courser_code))
+        table = soup.select_one('#Table1')
+        return table_to_dict(table)
 
     def login(self, account, password):
-        """
-        登录教务系统 jwxt.njupt.edu.cn
+        """登录教务系统 jwxt.njupt.edu.cn
         :param account: 南邮学号
         :param password: 密码
         :return: {'code': 1, "msg": "登录失败"} 或 {'code': 0, 'msg': '登录成功'}
@@ -216,24 +222,6 @@ class Zhengfang(Model):
             self.verify = True
         else:
             raise AuthenticationException(result['msg'])
-        return result
-
-    @zhengfang_logined
-    def list_optional_courses(self):
-        """
-        获取可选的课程列表，对应： 教务系统 -> 网上选课 -> 学生选课
-        :rtype: list[dict]
-        :return: 包含可选课程信息的list
-        """
-
-        soup = self.get_soup(URL.zhengfang_list_optional_courses(self.account))
-        if len(str(soup)) < 100:
-            raise TemporaryBannedException('选课三秒防刷')
-        trs = soup.select('#kcmcgrid > tr')
-        result = zhengfang_table_to_list(trs, remove_index_list=[8], index_cast_dict={
-            4: int,
-            9: int
-        })
         return result
 
     def _login_execute(self, url=None, data=None):

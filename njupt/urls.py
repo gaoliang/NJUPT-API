@@ -36,6 +36,10 @@ class URL(object):
         return cls.ZHENGFANG_HOST + '/xsxk.aspx?xh={}&xm=%B8%DF%C1%C1&gnmkdm=N121101'.format(account)
 
     @classmethod
+    def zhengfang_get_course_info(cls, account, course_code):
+        return cls.ZHENGFANG_HOST + '/kcxx.aspx?xh={}&kcdm={}&xkkh=%26nbsp%3bk'.format(account, course_code)
+
+    @classmethod
     def zhengfang_captcha(cls):
         # 教务系统验证码
         return cls.ZHENGFANG_HOST + '/CheckCode.aspx'

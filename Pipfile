@@ -11,10 +11,11 @@ requests = "*"
 pytz = "*"
 
 [dev-packages]
-"autopep8" = "*"
-pylint = "*"
 pytest = "*"
 pytest-cov = "*"
+"flake8" = "*"
+responses = "*"
+sphinx = "*"
 
 [requires]
 python_version = "3.6"

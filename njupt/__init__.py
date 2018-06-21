@@ -1,3 +1,2 @@
-# from njupt.models.aolan import Aolan
-from njupt.models.card import Card
-from njupt.models.zhengfang import Zhengfang
+from njupt.models.card import Card  # noqa
+from njupt.models.zhengfang import Zhengfang  # noqa

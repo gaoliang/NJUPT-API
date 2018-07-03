@@ -6,8 +6,6 @@ from io import BytesIO
 
 from PIL import Image
 
-from njupt.urls import URL
-
 BLACK = 0
 WHITE = 255
 
@@ -140,6 +138,8 @@ class ZhengfangCaptcha:
 
 
 if __name__ == "__main__":
-    r = requests.get(URL.zhengfang_captcha())
+    from njupt import Zhengfang
+    r = requests.get(Zhengfang.URLs.CAPTCHA)
     im = Image.open(BytesIO(r.content))
+    im.show()
     print(ZhengfangCaptcha(im))

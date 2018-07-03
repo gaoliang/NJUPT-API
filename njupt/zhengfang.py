@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 
 from njupt.exceptions import AuthenticationException, TemporaryBannedException
 from njupt.base import Model
-from njupt.urls import URL
 from njupt.utils import ZhengfangCaptcha, table_to_list, table_to_dict, login_required
 
 week_re = re.compile(r'第(\d+)-(\d+)周')
@@ -31,6 +30,20 @@ class Zhengfang(Model):
 
     >>> zf = Zhengfang(account='B11111111', password='xxx')
     """
+
+    class URLs:
+        HOST = "http://jwxt.njupt.edu.cn"
+
+        SCORE = HOST + '/xscj_gc.aspx?xh={account}&xm=%B8%DF%C1%C1&gnmkdm=N121605'
+        SCHEDULE = HOST + '/xskbcx.aspx?xh={account}&xm=%B8%DF%C1%C1&gnmkdm=N121603'
+        GRADE = HOST + '/xsdjkscx.aspx?xh={account}&xm=%B8%DF%C1%C1&gnmkdm=N121606'
+        SELECTED_COURSES = HOST + '/xsxkqk.aspx?xh={account}&xm=%B8%DF%C1%C1&gnmkdm=N121615'
+        OPTIONAL_COURSES = HOST + '/xsxk.aspx?xh={account}&xm=%B8%DF%C1%C1&gnmkdm=N121101'
+        COURSE_INFO = HOST + '/kcxx.aspx?xh={account}&kcdm={course_code}&xkkh=%26nbsp%3bk'
+        # 教务系统验证码
+        CAPTCHA = HOST + '/CheckCode.aspx'
+        # 教务系统登录
+        LOGIN = HOST + '/default2.aspx'
 
     def __init__(self, account=None, password=None):
         super(Zhengfang, self).__init__()
@@ -60,13 +73,12 @@ class Zhengfang(Model):
             ...
         ]
         """
-        soup = self.get_soup(method='get', url=URL.zhengfang_grade(self.account))
+        soup = self.get_soup(method='get', url=self.URLs.GRADE.format(account=self.account))
         table = soup.select_one('#DataGrid1')
         result = table_to_list(table, index_cast_dict={
             1: int,
             4: lambda x: datetime.strptime(x, '%Y%m%d')
         })
-        print(result)
         return result
 
     @login_required
@@ -78,14 +90,14 @@ class Zhengfang(Model):
         >>> zf.get_gpa()
         5.0
         """
-        view_state = self._get_viewstate(url=URL.zhengfang_score(self.account))
+        view_state = self._get_viewstate(url=self.URLs.SCORE.format(account=self.account))
         data = {
             'ddlXN': '',
             'ddlXQ': '',
             '__VIEWSTATE': view_state,
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
-        soup = self.get_soup(method='post', url=URL.zhengfang_score(self.account), data=data)
+        soup = self.get_soup(method='post', url=self.URLs.SCORE.format(self.account), data=data)
         return float(soup.select_one('#pjxfjd').text[7:])
 
     @login_required
@@ -112,7 +124,7 @@ class Zhengfang(Model):
         if year and semester:
             pass
         else:
-            r = self.get(url=URL.zhengfang_class_schedule(self.account))
+            r = self.get(url=self.URLs.SCHEDULE.format(account=self.account))
             soup = BeautifulSoup(r.text.replace('<br>', '\n'), 'lxml')
             trs = soup.select("#Table1 > tr")
             for index, tr in enumerate(trs):
@@ -163,7 +175,7 @@ class Zhengfang(Model):
             ...
         ]
         """
-        soup = self.get_soup(method='get', url=URL.zhengfang_courses(self.account))
+        soup = self.get_soup(method='get', url=self.URLs.SELECTED_COURSES.format(account=self.account))
         trs = soup.select('#DBGrid > tr')[1:]
         courses = []
         for tr in trs:
@@ -228,14 +240,14 @@ class Zhengfang(Model):
         ]
 
         """
-        viewstate = self._get_viewstate(url=URL.zhengfang_score(self.account))
+        viewstate = self._get_viewstate(url=self.URLs.SCORE.format(account=self.account))
         data = {
             'ddlXN': '',
             'ddlXQ': '',
             '__VIEWSTATE': viewstate,
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
-        soup = self.get_soup(method='post', url=URL.zhengfang_score(self.account), data=data)
+        soup = self.get_soup(method='post', url=self.URLs.SCORE.format(account=self.account), data=data)
         table = soup.select_one('#Datagrid1')
         return table_to_list(table, index_cast_dict={
             1: int,
@@ -252,7 +264,7 @@ class Zhengfang(Model):
         :return: 可选课程信息列表
         :raise: :class:`njupt.exceptions.TemporaryBannedException`
         """
-        soup = self.get_soup(URL.zhengfang_list_optional_courses(self.account))
+        soup = self.get_soup(self.URLs.OPTIONAL_COURSES.format(account=self.account))
         if len(str(soup)) < 100:
             raise TemporaryBannedException('选课三秒防刷')
         table = soup.select_one('#kcmcgrid')
@@ -271,15 +283,15 @@ class Zhengfang(Model):
         :rtype: dict
 
         """
-        soup = self.get_soup(URL.zhengfang_get_course_info(account=self.account, course_code=courser_code))
+        soup = self.get_soup(self.URLs.COURSE_INFO.format(account=self.account, course_code=courser_code))
         table = soup.select_one('#Table1')
         return table_to_dict(table)
 
     def login(self, account, password):
         # FIXME: 登录不可靠
-        captcha_code = ZhengfangCaptcha(self.get_image(URL.zhengfang_captcha())).crack()
+        captcha_code = ZhengfangCaptcha(self.get_image(self.URLs.CAPTCHA)).crack()
         data = {
-            "__VIEWSTATE": self._get_viewstate(URL.zhengfang_login()),
+            "__VIEWSTATE": self._get_viewstate(self.URLs.LOGIN),
             'txtUserName': account,
             'TextBox2': password,
             'RadioButtonList1': "%D1%A7%C9%FA",
@@ -288,7 +300,7 @@ class Zhengfang(Model):
             "hidPdrs": "",
             "hidsc": ""
         }
-        result = self._login_execute(url=URL.zhengfang_login(), data=data)
+        result = self._login_execute(url=self.URLs.LOGIN, data=data)
         if result['code'] == 2:
             # 如果验证码错误，尝试递归重复登录
             return self.login(account, password)

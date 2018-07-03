@@ -15,6 +15,10 @@ pipenv install njupt # or pip install njupt
 # 仅支持python3
 ```
 
+## API文档
+
+[http://gaoliang.github.io/NJUPT-API](http://gaoliang.github.io/NJUPT-API)
+
 ## 目前实现的功能
 
 [正方系统](#正方系统)
@@ -70,6 +74,8 @@ card = Card(account='11020xxxxxxxxxx',password='passwd')
     'Msg' : '缴费成功！'
 }
 ```
+其他api参见[http://gaoliang.github.io/NJUPT-API](http://gaoliang.github.io/NJUPT-API)
+
 
 
 ## todos

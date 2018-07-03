@@ -10,7 +10,7 @@ install_requires = open("requirements.txt").readlines()
 
 setup(
     name='njupt',
-    version='0.1.3',
+    version='0.1.4',
     platforms='any',
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     url='https://github.com/gaoliang/NJUPT-API',
@@ -22,6 +22,12 @@ setup(
         # If any package contains *.txt or *.rst files, include them:
         '': ['*.dat'],
     },
+    classifiers=[
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+    ],
     description='njupt api for humans',
     long_description=long_description,
 )

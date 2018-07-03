@@ -14,6 +14,7 @@
 #
 import os
 import sys
+
 # sys.path.insert(0, os.path.abspath('.'))
 
 # Insert NJUPT-API' path into the system.
@@ -29,7 +30,6 @@ author = 'gaoliang'
 version = ''
 # The full version, including alpha/beta/rc tags
 release = ''
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -71,19 +71,21 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
 html_theme = 'alabaster'
+# html_theme = 'flask'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    # 'show_powered_by': False,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -98,14 +100,15 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
-
+html_sidebars = {
+    '**': ['sidebarlogo.html', 'localtoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']
+}
+html_show_sourcelink = False
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'NJUPT-APIdoc'
-
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -135,7 +138,6 @@ latex_documents = [
      'gaoliang', 'manual'),
 ]
 
-
 # -- Options for manual page output ------------------------------------------
 
 # One entry per manual page. List of tuples
@@ -144,7 +146,6 @@ man_pages = [
     (master_doc, 'njupt-api', 'NJUPT-API Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -156,6 +157,5 @@ texinfo_documents = [
      author, 'NJUPT-API', 'One line description of project.',
      'Miscellaneous'),
 ]
-
 
 # -- Extension configuration -------------------------------------------------

@@ -1,7 +1,6 @@
 import hashlib
 
-from njupt import settings
-from njupt.models.base import Model
+from njupt.base import Model
 from njupt.urls import URL
 from njupt.utils import AolanCaptcha
 
@@ -31,7 +30,6 @@ class Aolan(Model):
         if r.ok:
             if "辅导员评议" in r.text:
                 self.cookies.save(ignore_discard=True)  # 保存登录信息cookies
-                self.cookies.load(filename=settings.COOKIES_FILE, ignore_discard=True)
                 return {'r': 0, 'msg': '登录成功'}
             else:
                 return {'r': 1, 'msg': '检查账号密码验证码是否正确'}

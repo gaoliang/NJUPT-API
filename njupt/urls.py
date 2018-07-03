@@ -9,7 +9,6 @@ class URL(object):
     ZHENGFANG_HOST = "http://jwxt.njupt.edu.cn"
     AOLAN_HOST = "http://stu.njupt.edu.cn"
     LIB_HOST = "http://202.119.228.6:8080"
-    CARD_HOST = "http://yktapp.njupt.edu.cn:8070"
 
     @classmethod
     def zhengfang_logintest(cls):
@@ -67,42 +66,3 @@ class URL(object):
     def lib_captcha(cls):
         # 图书馆验证码
         return cls.LIB_HOST + '/reader/captcha.php'
-
-    @classmethod
-    def card_login(cls):
-        # 一卡通登录
-        return cls.CARD_HOST + '/Login/LoginBySnoQuery'
-
-    @classmethod
-    def card_captcha(cls):
-        # 一卡通验证码
-        return cls.CARD_HOST + '/Login/GetValidateCode'
-
-    @classmethod
-    def card_info(cls):
-        # 一卡通基础信息
-        return cls.CARD_HOST + '/User/GetCardInfoByAccountNoParm'
-
-    @classmethod
-    def card_bill(cls):
-        # 一卡通详单
-        return cls.CARD_HOST + '/Report/GetMyBill'
-
-    @classmethod
-    def card_recharge(cls):
-        # 一卡通充值
-        return cls.CARD_HOST + '/User/Account_Pay'
-
-    @classmethod
-    def card_common(cls):
-        # 一卡通Dr.com信息
-        return cls.CARD_HOST + '/Tsm/TsmCommon'
-
-    @classmethod
-    def card_net_pay(cls):
-        # 一卡通网费充值
-        return cls.CARD_HOST + '/Tsm/Net_Pay'
-
-    @classmethod
-    def card_elec_pay(cls):
-        return cls.CARD_HOST + '/Tsm/Elec_Pay'

@@ -1,4 +1,4 @@
-from njupt.models.card import Card  # noqa
-from njupt.models.zhengfang import Zhengfang  # noqa
+from njupt.card import Card  # noqa
+from njupt.zhengfang import Zhengfang  # noqa
 
 __all__ = ["Card", "Zhengfang"]

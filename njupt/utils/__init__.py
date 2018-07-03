@@ -1,6 +1,9 @@
+from functools import wraps
+
 from njupt.utils.aolan.aolan_captcha import AolanCaptcha  # noqa
 from njupt.utils.card.card_captcha import CardCaptcha  # noqa
 from njupt.utils.zhengfang.zhengfang_captcha import ZhengfangCaptcha  # noqa
+from njupt.exceptions import UnauthorizedError
 
 
 def table_to_list(table, remove_index_list=None, index_cast_dict=None):
@@ -62,3 +65,13 @@ def table_to_dict(table, remove_index_list=None, index_cast_dict=None):
             value = index_cast_dict[row_index](value)
         result[key] = value
     return result
+
+
+def login_required(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if self.verify:
+            return func(self, *args, **kwargs)
+        else:
+            raise UnauthorizedError('login required!')
+    return wrapper

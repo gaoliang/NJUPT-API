@@ -5,7 +5,6 @@ import os
 import pickle
 import requests
 import math
-from njupt.urls import URL
 from PIL import Image
 from io import BytesIO
 
@@ -93,9 +92,3 @@ class AolanCaptcha:
 
     def __str__(self):
         return self.crack()
-
-
-if __name__ == "__main__":
-    r = requests.get(URL.aolan_captcha())
-    im = Image.open(BytesIO(r.content))
-    print(AolanCaptcha(im))

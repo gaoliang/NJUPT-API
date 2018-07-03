@@ -2,13 +2,14 @@ import hashlib
 import os
 import pickle
 import shutil
+import time
+
 from PIL import Image
 
 from njupt.utils import CardCaptcha
 
 BLACK = 0
 WHITE = 255
-import time
 
 
 def spilt2chars():

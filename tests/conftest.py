@@ -1,23 +1,39 @@
 import os
+import re
+from functools import wraps
+import responses
 
-import pytest
-
-from njupt import Card, Zhengfang
-
-CARD_ACCOUNT = os.environ['CARD_ACCOUNT']
-CARD_RIGHT_PASSWORD = os.environ['CARD_RIGHT_PASSWORD']
-CARD_WRONG_PASSWORD = "wrong_password¬"
+ALL_URL_RE = re.compile('.*')
+TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-@pytest.fixture(scope='session')
-def card():
-    return Card(CARD_ACCOUNT, CARD_RIGHT_PASSWORD)
+def mock_response(method='GET', url=ALL_URL_RE, body=None, file_name=None, json=None, status=200):
+    """
+    mock requests请求的装饰器， 方便写测试用
+    :param method: 请求方法, 可选'GET', 'POST'等
+    :type body: bytes or str
+    :param body: response的响应体， bytes
+    :param url: 需要进行mock的请求地址， 默认为mock全部地址
+    :param file_name: 如果需要设置response的body为文件内容，则传入相对于tests根目录的路径
+    :param json: json字符串，用于response.json()
+    :param status: HTTP状态码
+    """
+    if file_name:
+        body = open(os.path.join(TEST_DIR, file_name), 'r').read().encode('gb2312')
 
+    def _mock_reponse(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            responses.add(method=method,
+                          url=url,
+                          json=json,
+                          body=body,
+                          status=status
+                          )
+            result = func(*args, **kwargs)
+            responses.remove(method, url)
+            return result
 
-ZHENGFANG_ACCOUNT = os.environ['ZHENGFANG_ACCOUNT']
-ZHENGFANG_RIGHT_PASSWORD = os.environ['ZHENGFANG_RIGHT_PASSWORD']
+        return wrapper
 
-
-@pytest.fixture(scope='session')
-def zhengfang():
-    return Zhengfang(ZHENGFANG_ACCOUNT, ZHENGFANG_RIGHT_PASSWORD)
+    return _mock_reponse

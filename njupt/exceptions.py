@@ -15,3 +15,7 @@ class AuthenticationException(NjuptException):
 
 class UnauthorizedError(NjuptException):
     """Not authorized Error"""
+
+
+class TemporaryBannedException(NjuptException):
+    """Temporary Banned by Server"""

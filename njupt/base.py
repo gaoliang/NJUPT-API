@@ -6,8 +6,6 @@ import urllib3
 from PIL import Image
 from bs4 import BeautifulSoup
 
-from njupt import settings
-
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -15,7 +13,6 @@ class Model(requests.Session):
     def __init__(self):
         super(Model, self).__init__()
         self.verify = False
-        self.headers = settings.HEADERS
 
     def _get_viewstate(self, url=None):
         self.headers['Referer'] = url

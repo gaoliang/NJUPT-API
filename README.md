@@ -1,7 +1,7 @@
 
 # NJUPT-API 简介
 
-NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简洁、优雅的、Pythonic的API接口，以便用户能够在此基础上进行扩展开发。
+NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简洁API接口，以便能够在此基础上进行扩展开发。
 
 ## 谁在使用？
 
@@ -23,6 +23,7 @@ pipenv install njupt # or pip install njupt
 - [获取课程成绩和绩点](#获取课程成绩和绩点)
 - [获取等级考试信息](#获取等级考试信息)
 - [获取全部课程](#获取全部课程)
+- [获取可选课程](#获取可选课程)
 - [获取课表](#获取课表)
 
 [校园卡系统](#校园卡系统)
@@ -35,209 +36,41 @@ pipenv install njupt # or pip install njupt
 - [充值网费](#充值网费)
 - [充值寝室电费](#充值寝室电费)
 
-### 正方系统
+## Examples
 
-#### 登录正方
-
+这里是一些简单的使用案例
 ```python
 from njupt import Zhengfang
-zhengfang = Zhengfang()
->>> zhengfang.login(account='B1xxxxxxx',password='password')
-# or zhengfang = Zhengfang('B1xxxxxxx','password')
+zf = Zhengfang(account='B1xxxxxxx',password='password')
+>>> zf.get_courses()
+[
+    {
+        'class_end': 9,
+        'class_start': 8,
+        'day': 1,
+        'name': '市场营销',
+        'room': '教4－101',
+        'teacher': '王波(男)',
+        'week': '第1-15周|单周',
+        'interval': 2,
+        'week_end': 15,
+        'week_start': 1
+    },
+    ...
+]
 
-```
 
-#### 获取课程成绩和绩点
-
-```python
->>> zhengfang.get_score()
-    {'gpa': 4.99,
-    'courses': [
-        {
-            'year': '2015-2016',  # 学年
-            'semester': '1',  # 学期
-            'code': '00wk00003',  # 课程代码
-            'name': '从"愚昧"到"科学"-科学技术简史',  # 课程名称
-            'attribute': '任选',  # 课程性质
-            'belong': '全校任选课',  # 课程归属
-            'credit': '2.0',  # 学分
-            'point': '',  # 绩点
-            'score': '81',  # 成绩
-            'minor_mark': '0',  # 辅修标记
-            'make_up_score': '',  # 辅修标记
-            'retake_score': '',  # 重修成绩
-            'college': '网络课程',  # 开课学院
-            'note': '',  # 备注
-            'retake_mark': '0',  # 重修标记
-            'english_name': ''  # 英文名称
-        },
-        ...
-        ]
-    }
-```
-
-#### 获取等级考试信息
-
-```python
->>> zhengfang.get_grade()
-    [
-        {
-        'date': '20151219',
-         'name': '全国大学英语四级考试',
-         'number': '320082152113313',
-         'score': '547',
-         'semester': '1',
-         'year': '2015-2016'
-        },
-        ...
-    ]
-```
-
-#### 获取全部课程
-
-```python
-
->>> zhengfang.get_courses()
-    [{'class_end': 9,
-      'class_start': 8,
-      'day': 1,
-      'name': '市场营销',
-      'room': '教4－101',
-      'teacher': '王波(男)',
-      'week': '第1-15周|单周',
-      'interval': 2,
-      'week_end': 15,
-      'week_start': 1
-      },
-     {
-      'class_end': 9,
-      'class_start': 8,
-      'day': 3,
-      'name': '市场营销',
-      'room': '教4－101',
-      'teacher': '王波(男)',
-      'week': '第1-16周',
-      'interval': 1,
-      'week_end': 16,
-      'week_start': 1
-      },
-      ...
-    ]
-```
-
-#### 获取课表
-
-```python
->>> zhengfang.get_schedule(week=1)
-    # 二维列表，[i][j] 代表周i第j节课的课程。 为了方便，i或j为零0的单元均不使用。
-    # 课程的节次使用一天12节课的形式描述。
-    # 课程信息使用dict进行描述。
-    # 一个参考的结构如下
-    [
-        [],
-        [   None,
-            {
-            'classroom': '教4－202',
-            'name': '技术经济学',
-            'teacher': '储成祥'
-            },
-            ...
-        ],
-        ...
-    ]
-
-```
-
-### 校园卡系统
-
-#### 登录校园卡
-
-```python
 from njupt import Card
->>> card = Card()
->>> card.login(account='11020xxxxxxxxxx',password='passwd')
-# or card = Card(account,password)
-```
+card = Card(account='11020xxxxxxxxxx',password='passwd')
 
-#### 获取校园卡余额
-
-```python
->>> card.get_balance()
-    {
-        'balance': 10.01,  # 到账余额
-        'unsettle_balance': 0.01  # 过渡余额
-        'total': 10.02  # 总余额
-    }
-```
-
-#### 充值校园卡
-
-```python
->>> card.recharge(amount=2.33)
-    {
-        'success':True,  # 转账是否成功
-        'code': 0,  # 状态码
-        'msg': '转账成功'  # 附加信息
-    }
-```
-
-#### 获取账单
-
-```python
->>> card.get_bill(start_date='2017-02-33',end_date='2018-01-03',rows=30,page=1)
-    {'recodes':
-        [
-            {'balances': 39.71, # 余额
-              'change': -5, # 变动
-              'comment': '未知系统,交电费', # 注释
-              'department': '仙林售电处', # 操作部门
-              'time': '2018-01-26 20:55:40', # 时间
-              'type': '代扣代缴', # 类型
-              'week': '星期五'}, # 星期
-            {'balances': 39.71,
-              'change': -7.5,
-              'comment': '',
-              'department': '一餐厅二楼清真食堂',
-              'time': '2018-01-24 17:09:36',
-              'type': '持卡人消费',
-              'week': '星期三'},
-               ...
-        ],
-    'total': 52, # 总的记录数
-    'total_pages':2,  # 总页数
-    'page':1  # 当前的页码
-    }
-```
-
-#### 获取网费余额
-
-```python
->>> card.get_net_balance()
-    2.33
-```
-
-#### 充值网费
-
-```python
->>> card.recharge_net(amount=2.33)
-    {
-        'success': True,
-        'code' : 0,
-        'Msg' : '缴费成功！'
-    }
-```
-
-#### 充值寝室电费
-
-```python
 >>> card.recharge_xianlin_elec(amount=2.33,building_name='兰苑11栋',big_room_id='403', small_room_id='1')
-    {
-        'success': True,
-        'code' : 0,
-        'Msg' : '缴费成功！'
-    }
-    # 三牌楼校区为card.recharge_sanpailou_elec()，参数相同（未测试）
+{
+    'success': True,
+    'code' : 0,
+    'Msg' : '缴费成功！'
+}
 ```
+
 
 ## todos
 

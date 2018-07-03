@@ -9,19 +9,21 @@ Welcome to NJUPT-API documentation!
    :maxdepth: 2
    :caption: Contents:
 
+API
+=====================================
 
 一卡通API
-******************
+----------
 .. autoclass:: njupt.Card
    :members:
 
 教务处API
-****************
+---------
 .. autoclass:: njupt.Zhengfang
    :members:
 
 通用异常
-************
+---------
 .. automodule:: njupt.exceptions
    :members:
    :undoc-members:

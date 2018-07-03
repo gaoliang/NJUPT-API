@@ -97,7 +97,7 @@ class Zhengfang(Model):
             '__VIEWSTATE': view_state,
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
-        soup = self.get_soup(method='post', url=self.URLs.SCORE.format(self.account), data=data)
+        soup = self.get_soup(method='post', url=self.URLs.SCORE.format(account=self.account), data=data)
         return float(soup.select_one('#pjxfjd').text[7:])
 
     @login_required

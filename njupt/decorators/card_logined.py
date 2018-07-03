@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+from functools import wraps
+
 """
 用户认证装饰器(判断一卡通是否已经登录)
 """
@@ -7,6 +9,7 @@ from njupt.exceptions import UnauthorizedError
 
 
 def card_logined(func):
+    @wraps(func)
     def wrapper(self, *args, **kwargs):
         if self.verify:  # 利用状态量进行状态的判定
             return func(self, *args, **kwargs)

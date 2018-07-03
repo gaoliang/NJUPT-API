@@ -18,6 +18,12 @@ AIDS = {
 
 
 class Card(Model):
+    """
+    一卡通相关接口
+
+    >>> card = Card.login(account='B15080500', password='sssss')
+
+    """
     def __init__(self, account=None, password=None):
         super(Card, self).__init__()
         self.aid = None
@@ -32,6 +38,7 @@ class Card(Model):
     def login(self, account, password):
         """
         登录校园卡网站
+
         :param str account: 校园卡卡号
         :param str password: 校园卡查询密码
         :return: {'code': 1, "msg": "登录失败，请重试"} 或 {'code': 0, 'msg': '登录成功'}
@@ -71,7 +78,8 @@ class Card(Model):
     def _get_inner_account(self):
         """
         获取对应的内部账号，部分接口参数需要
-        :return: 校园卡号对应的系统内部账号 
+
+        :return: 校园卡号对应的系统内部账号
         """
         if not self.inner_account:
             info = self.get_json(URL.card_info(), method='post', data={'json': True})
@@ -83,12 +91,15 @@ class Card(Model):
     def get_balance(self):
         """
         查询余额
-        :return: dict
-                {
-                    'balance': 10.01,  # 到账余额
-                    'unsettle_balance': 0.01  # 过渡余额
-                    'total': 10.02  # 总余额
-                }
+
+        :rtype: dict
+        :example:
+            >>> card.get_balance()
+            {
+                'balance': 10.01,         # 到账余额
+                'unsettle_balance': 0.01  # 过渡余额
+                'total': 10.02            # 总余额
+            }
         """
         info = self.get_json(URL.card_info(), method='post', data={'json': True})
         result = json.loads(info['Msg'])
@@ -104,7 +115,9 @@ class Card(Model):
     def get_net_balance(self):
         """
         获取Dr.com的上网费用余额
-        :return: float  2.33
+
+        :return: 2.33
+        :rtype: float
         """
         data = {
             'jsondata': '{"query_net_info": {"aid": "%s", "account": "%s", "payacc": ""}}'  # 无法使用format格式化
@@ -117,16 +130,19 @@ class Card(Model):
         return float(re.search(r'余额(\d*\.\d*)元', result['query_net_info']['errmsg']).groups()[0])
 
     @card_logined
-    def recharge(self, amount=0.01):
+    def recharge(self, amount):
         """
         从绑定的银行卡中扣款充值余额
-        :param amount: 充值金额，默认为0.01元
-        :return: dict
-            {   
-                'success':True  # 转账是否成功
-                'code': 0,  # 状态码
-                'msg': '转账成功'  # 附加信息
-            }
+
+        :param amount: 充值金额, 单位为元
+        :type amount: float or int
+        :return: {
+                    'success':True,
+                    'code': 0,
+                    'msg': '转账成功'
+                }
+        :rtype: dict
+        :
         """
         data = {
             'account': self._get_inner_account(),
@@ -148,10 +164,12 @@ class Card(Model):
         return result
 
     @card_logined
-    def recharge_net(self, amount=0.01):
+    def recharge_net(self, amount):
         """
-        充值网费（从校园卡余额中）
-        :param amount: 金额 如 2.33
+        充值网费（校园卡余额 ==> 城市热点）
+
+        :param amount: 充值金额, 单位为元
+        :type amount: float or int
         :return: dict
             {
                 'success':True, 
@@ -197,18 +215,20 @@ class Card(Model):
         return building_id
 
     @card_logined
-    def recharge_xianlin_elec(self, amount, building_name, room_id):
+    def recharge_xianlin_elec(self, amount, building_name, big_room_id, small_room_id=0):
         """
         充值仙林校区的寝室电费
+
         :param amount: 金额 0.01 2.33
-        :param building_name: 楼栋名称，例如 "兰苑11栋" 
-        :param room_id: 房间号，例如4030 -> 403公共 4031 -> 403 1寝空调 4032 -> 403 2寝空调
+        :param building_name: 楼栋名称，例如 "兰苑11栋"
+        :param big_room_id: 大寝寝室号
+        :param small_room_id: 小寝寝室号， 不传或传0则表示充值为大寝电费， 1、2、3则充值对应小寝空调电费
         :return: dict {'code': 0, 'msg': '缴费成功！', 'success': True}
         """
         try:
             buiding_id = self._get_build_ids(AIDS['elec_xianlin'])[building_name]
             return self._recharge_electricity(amount=amount, elec_aid=AIDS['elec_xianlin'], building_id=buiding_id,
-                                              building=building_name, room_id=room_id)
+                                              building=building_name, room_id='{}{}'.format(big_room_id, small_room_id))
         except KeyError:
             raise NjuptException("不存在的楼栋")
 
@@ -254,6 +274,7 @@ class Card(Model):
                  end_date=datetime.datetime.now().strftime("%Y-%m-%d"), rows=100, page=1):
         """
         查询校园卡消费记录，默认为最近一个月的消费记录
+
         :param start_date: 查询区间的开始时间 "2017-12-27"
         :param end_date:  查询区间的结束时间 "2018-01-26"
         :param rows: 一次查询返回的最大记录数量,默认为100条记录

@@ -4,6 +4,8 @@
 用户认证装饰器(判断用户是否已经登录)
 """
 
+from functools import wraps
+
 import requests
 import requests.utils
 
@@ -12,6 +14,7 @@ from njupt.urls import URL
 
 
 def zhengfang_logined(func):
+    @wraps(func)
     def wrapper(self, *args, **kwargs):
         if self.verify:  # 利用状态量进行状态的判定
             return func(self, *args, **kwargs)

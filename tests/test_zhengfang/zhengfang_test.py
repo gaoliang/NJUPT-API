@@ -5,7 +5,7 @@ import responses
 from tests.conftest import mock_response
 
 
-@mock_response(file_name='htmls/list_optional_courses.html')
+@mock_response(file_name='htmls/zhengfang/list_optional_courses.html')
 @responses.activate
 def test_list_optional_courses(zhengfang):
     optional_courses = zhengfang.list_optional_courses()
@@ -14,7 +14,7 @@ def test_list_optional_courses(zhengfang):
     assert optional_courses[1]['余量'] == 150
 
 
-@mock_response(file_name='htmls/get_grades.html')
+@mock_response(file_name='htmls/zhengfang/get_grades.html')
 @responses.activate
 def test_list_exam_grades(zhengfang):
     grades = zhengfang.list_exam_grades()
@@ -23,16 +23,16 @@ def test_list_exam_grades(zhengfang):
     assert grades[0]['学期'] == 1
 
 
-@mock_response(method='POST', file_name='htmls/scores.html')
-@mock_response(method='GET', file_name='htmls/scores.html')
+@mock_response(method='POST', file_name='htmls/zhengfang/scores.html')
+@mock_response(method='GET', file_name='htmls/zhengfang/scores.html')
 @responses.activate
 def test_get_gpa(zhengfang):
     gpa = zhengfang.get_gpa()
     assert gpa == 3.52
 
 
-@mock_response(method='POST', file_name='htmls/scores.html')
-@mock_response(method='GET', file_name='htmls/scores.html')
+@mock_response(method='POST', file_name='htmls/zhengfang/scores.html')
+@mock_response(method='GET', file_name='htmls/zhengfang/scores.html')
 @responses.activate
 def test_list_exam_scores(zhengfang):
     exam_scores = zhengfang.list_exam_scores()

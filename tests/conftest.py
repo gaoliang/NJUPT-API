@@ -1,28 +1,7 @@
 import os
 import re
 from functools import wraps
-
-import pytest
 import responses
-
-from njupt import Card, Zhengfang
-
-
-@pytest.fixture(scope='session')
-def card():
-    card = Card()
-    card.account = 'account'
-    card.verify = True
-    return card
-
-
-@pytest.fixture(scope='session')
-def zhengfang():
-    zhengfang = Zhengfang()
-    zhengfang.account = 'account'
-    zhengfang.verify = True
-    return zhengfang
-
 
 ALL_URL_RE = re.compile('.*')
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))

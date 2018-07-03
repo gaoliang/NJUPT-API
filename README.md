@@ -230,7 +230,7 @@ from njupt import Card
 #### 充值寝室电费
 
 ```python
->>> card.recharge_xianlin_elec(amount=2.33,building_name='兰苑11栋',room_id='4031')
+>>> card.recharge_xianlin_elec(amount=2.33,building_name='兰苑11栋',big_room_id='403', small_room_id='1')
     {
         'success': True,
         'code' : 0,

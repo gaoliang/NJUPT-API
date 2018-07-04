@@ -63,7 +63,7 @@ with open(os.path.join(root, 'accounts.json')) as fp:
             with open(score_dict_path, 'w', encoding='utf-8') as score_file:
                 json.dump(score_dict, score_file)
         else:
-            with open(score_dict_path, encoding='utf-8') as score_file:
+            with open(score_dict_path, 'rw', encoding='utf-8') as score_file:
                 old_score_dict = json.load(score_file)
                 for score_code, score in score_dict.items():
                     if score_code not in old_score_dict:
@@ -78,3 +78,4 @@ with open(os.path.join(root, 'accounts.json')) as fp:
 
                             )
                         )
+                json.dump(score_dict, score_file)

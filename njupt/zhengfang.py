@@ -4,8 +4,8 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from njupt.exceptions import AuthenticationException, TemporaryBannedException
 from njupt.base import Model
+from njupt.exceptions import AuthenticationException, TemporaryBannedException
 from njupt.utils import ZhengfangCaptcha, table_to_list, table_to_dict, login_required
 
 week_re = re.compile(r'第(\d+)-(\d+)周')
@@ -255,6 +255,79 @@ class Zhengfang(Model):
             7: lambda x: float(x) if x else None,
             8: lambda x: float(x) if x.isdigit() else x
         })
+
+    @login_required
+    def get_gpa_under_pku(self):
+        """获取按照北大GPA算法计算的绩点
+
+        :return: 北大算法绩点，注意此方法不计算任选课的成绩
+
+        >>>zf.get_gpa_under_pku()
+        """
+        scores = self.list_exam_scores()
+        effective_courses = [score for score in scores if score['课程性质'] != '任选']
+        total_credits = 0
+        academic_credits = 0
+        for score in effective_courses:
+            if score['成绩'] == '优秀':
+                score['成绩'] = 90
+            elif score['成绩'] == '良好':
+                score['成绩'] = 80
+            elif score['成绩'] == '中等':
+                score['成绩'] = 70
+            elif score['成绩'] == '合格':
+                score['成绩'] = 60
+            elif score['成绩'] == '不合格':
+                score['成绩'] = 59
+        for score in effective_courses:
+            if score['成绩'] > 60:
+                score['绩点'] = float('%.2f' % (4 - 3 * (100 - score['成绩']) ** 2 / 1600))
+            else:
+                if score['补考成绩'] == '及格':
+                    score['绩点'] = 1.0
+                else:
+                    score['绩点'] = 0.0
+            academic_credits += score['学分'] * score['绩点']
+            total_credits += score['学分']
+        return float('%.2f' % (academic_credits / total_credits))
+
+    @login_required
+    def get_gpa_under_zju(self):
+        """获取按照浙大GPA算法计算的绩点
+
+        :return: 浙大算法绩点，注意此方法不计算任选课的成绩
+
+        >>>zf.get_gpa_under_zju()
+
+        """
+        scores = self.list_exam_scores()
+        effective_courses = [score for score in scores if score['课程性质'] != '任选']
+        total_credits = 0
+        academic_credits = 0
+        for score in effective_courses:
+            if score['成绩'] == '优秀':
+                score['成绩'] = 90
+            elif score['成绩'] == '良好':
+                score['成绩'] = 80
+            elif score['成绩'] == '中等':
+                score['成绩'] = 70
+            elif score['成绩'] == '合格':
+                score['成绩'] = 60
+            elif score['成绩'] == '不合格':
+                score['成绩'] = 59
+        for score in effective_courses:
+            if score['成绩'] >= 85:
+                score['绩点'] = 4.0
+            elif 60 <= score['成绩'] <= 84:
+                score['绩点'] = (score['成绩'] - 60) * 0.1 + 1.5
+            else:
+                if score['补考成绩'] == '及格':
+                    score['绩点'] = 1.0
+                else:
+                    score['绩点'] = 0.0
+            academic_credits += score['学分'] * score['绩点']
+            total_credits += score['学分']
+        return float('%.2f' % (academic_credits / total_credits))
 
     @login_required
     def list_optional_courses(self):

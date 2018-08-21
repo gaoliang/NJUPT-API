@@ -1,0 +1,588 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Welcome to NJUPT-API documentation! &#8212; NJUPT-API  文档</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-njupt-api-documentation">
+<h1>Welcome to NJUPT-API documentation!<a class="headerlink" href="#welcome-to-njupt-api-documentation" title="永久链接至标题">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="api">
+<h1>API<a class="headerlink" href="#api" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>一卡通API<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="njupt.Card">
+<em class="property">class </em><code class="descclassname">njupt.</code><code class="descname">Card</code><span class="sig-paren">(</span><em>account=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card" title="永久链接至目标">¶</a></dt>
+<dd><p>一卡通相关接口</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>account</strong> (<em>str</em>) – 一卡通卡号</li>
+<li><strong>password</strong> (<em>str</em>) – 一卡通查询密码</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#njupt.exceptions.AuthenticationException" title="njupt.exceptions.AuthenticationException"><code class="xref py py-class docutils literal notranslate"><span class="pre">njupt.exceptions.AuthenticationException</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span> <span class="o">=</span> <span class="n">Card</span><span class="p">(</span><span class="n">account</span><span class="o">=</span><span class="s1">&#39;B15080500&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;sssss&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="njupt.Card.get_balance">
+<code class="descname">get_balance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.get_balance" title="永久链接至目标">¶</a></dt>
+<dd><p>查询余额</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回:</th><td class="field-body">包含 过度余额、到账余额、总余额的dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回类型:</th><td class="field-body">dict of (str, float)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">get_balance</span><span class="p">()</span>
+<span class="go">{&#39;balance&#39;: 10.01, &#39;unsettle_balance&#39;: 0.01, &#39;total&#39;: 10.02}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.get_bill">
+<code class="descname">get_bill</code><span class="sig-paren">(</span><em>start_date='2018-07-22'</em>, <em>end_date='2018-08-21'</em>, <em>rows=100</em>, <em>page=1</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.get_bill" title="永久链接至目标">¶</a></dt>
+<dd><p>查询一卡通消费记录，默认为最近一个月的消费记录</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>start_date</strong> – 如 “2017-12-27”</li>
+<li><strong>end_date</strong> – 如 “2018-01-26”</li>
+<li><strong>rows</strong> – 一次查询返回的最大记录数量,默认为100条记录</li>
+<li><strong>page</strong> – 如果结果数量有多页，决定返回第几页。</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first">查询到的信息，格式见例子</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">返回类型:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">get_bill</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">    &#39;recodes&#39;:</span>
+<span class="go">        [</span>
+<span class="go">            {</span>
+<span class="go">                &#39;balance&#39;: 39.71,</span>
+<span class="go">                &#39;change&#39;: -5,</span>
+<span class="go">                &#39;comment&#39;: &#39;未知系统,交电费&#39;,</span>
+<span class="go">                &#39;department&#39;: &#39;仙林售电处&#39;,</span>
+<span class="go">                &#39;time&#39;: &#39;2018-01-26 20:55:40&#39;,</span>
+<span class="go">                &#39;type&#39;: &#39;代扣代缴&#39;,</span>
+<span class="go">                &#39;week&#39;: &#39;星期五&#39;</span>
+<span class="go">            },</span>
+<span class="go">            ...</span>
+<span class="go">        ],</span>
+<span class="go">    &#39;total&#39;: 52</span>
+<span class="go">    &#39;total_pages&#39;: 2</span>
+<span class="go">    &#39;page&#39;: 1</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.get_net_balance">
+<code class="descname">get_net_balance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.get_net_balance" title="永久链接至目标">¶</a></dt>
+<dd><p>获取Dr.com的上网费用余额</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回:</th><td class="field-body">dr.com的余额</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回类型:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">get_net_balance</span><span class="p">()</span>
+<span class="go">2.33</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.recharge">
+<code class="descname">recharge</code><span class="sig-paren">(</span><em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.recharge" title="永久链接至目标">¶</a></dt>
+<dd><p>从绑定的银行卡中扣款充值余额</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>amount</strong> (<em>float</em><em> or </em><em>int</em>) – 充值金额, 单位为元</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">充值结果</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">返回类型:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">recharge</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">{&#39;success&#39;: True, &#39;code&#39;: 0, &#39;msg&#39;: &#39;转账成功&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.recharge_net">
+<code class="descname">recharge_net</code><span class="sig-paren">(</span><em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.recharge_net" title="永久链接至目标">¶</a></dt>
+<dd><p>充值网费（一卡通余额 ==&gt; 城市热点）</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>amount</strong> (<em>float</em><em> or </em><em>int</em>) – 充值金额, 单位为元</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">充值结果</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">recharge_net</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+<span class="go">{&#39;success&#39;: True, &#39;code&#39; : 0, &#39;Msg&#39; : &#39;充值成功&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.recharge_sanpailou_elec">
+<code class="descname">recharge_sanpailou_elec</code><span class="sig-paren">(</span><em>amount</em>, <em>building_name</em>, <em>room_id</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.recharge_sanpailou_elec" title="永久链接至目标">¶</a></dt>
+<dd><p>充值三牌楼校区的寝室电费，参数参考仙林校区（未测试</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.recharge_xianlin_elec">
+<code class="descname">recharge_xianlin_elec</code><span class="sig-paren">(</span><em>amount</em>, <em>building_name</em>, <em>big_room_id</em>, <em>small_room_id=0</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.recharge_xianlin_elec" title="永久链接至目标">¶</a></dt>
+<dd><p>充值仙林校区的寝室电费</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>amount</strong> (<em>float</em>) – 充值金额</li>
+<li><strong>building_name</strong> (<em>str</em>) – 楼栋名称，例如 “兰苑11栋”</li>
+<li><strong>big_room_id</strong> (<em>int</em><em> or </em><em>str</em>) – 大寝寝室号</li>
+<li><strong>small_room_id</strong> (<em>int</em><em> or </em><em>str</em>) – 小寝寝室号， 不传或传0则表示充值为大寝电费， 1、2、3则充值对应小寝空调电费</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first">充值结果</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#njupt.exceptions.NjuptException" title="njupt.exceptions.NjuptException"><code class="xref py py-class docutils literal notranslate"><span class="pre">njupt.exceptions.NjuptException</span></code></a> 楼栋名称不正确</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">recharge_xianlin_elec</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">amount</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">building_name</span><span class="o">=</span><span class="s1">&#39;兰苑11栋&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">big_room_id</span><span class="o">=</span><span class="mi">403</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">small_room_id</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="go">{&#39;code&#39;: 0, &#39;msg&#39;: &#39;缴费成功！&#39;, &#39;success&#39;: True}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h2>教务处API<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="njupt.Zhengfang">
+<em class="property">class </em><code class="descclassname">njupt.</code><code class="descname">Zhengfang</code><span class="sig-paren">(</span><em>account=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang" title="永久链接至目标">¶</a></dt>
+<dd><p>南邮正方教务</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>account</strong> (<em>str</em>) – 南邮学号</li>
+<li><strong>password</strong> (<em>str</em>) – 密码</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raise:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#njupt.exceptions.AuthenticationException" title="njupt.exceptions.AuthenticationException"><code class="xref py py-class docutils literal notranslate"><span class="pre">njupt.exceptions.AuthenticationException</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span> <span class="o">=</span> <span class="n">Zhengfang</span><span class="p">(</span><span class="n">account</span><span class="o">=</span><span class="s1">&#39;B11111111&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;xxx&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="njupt.Zhengfang.get_course_info">
+<code class="descname">get_course_info</code><span class="sig-paren">(</span><em>courser_code</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_course_info" title="永久链接至目标">¶</a></dt>
+<dd><p>获取课程的简介信息</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>courser_code</strong> – 课程代码</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回类型:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_courses">
+<code class="descname">get_courses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_courses" title="永久链接至目标">¶</a></dt>
+<dd><p>获取这学期的选课情况</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回:</th><td class="field-body">格式参看例子，期中interval为1则为单周，2则为双周。 这些信息足够生成课表了</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回类型:</th><td class="field-body">list of dict</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">get_courses</span><span class="p">()</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;class_start&#39;: 8,</span>
+<span class="go">        &#39;class_end&#39;: 9,</span>
+<span class="go">        &#39;day&#39;: 1,</span>
+<span class="go">        &#39;name&#39;: &#39;市场营销&#39;,</span>
+<span class="go">        &#39;room&#39;: &#39;教4－101&#39;,</span>
+<span class="go">        &#39;teacher&#39;: &#39;王波(男)&#39;,</span>
+<span class="go">        &#39;week&#39;: &#39;第1-15周|单周&#39;,</span>
+<span class="go">        &#39;interval&#39;: 2,</span>
+<span class="go">        &#39;week_end&#39;: 15,</span>
+<span class="go">        &#39;week_start&#39;: 1</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_gpa">
+<code class="descname">get_gpa</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_gpa" title="永久链接至目标">¶</a></dt>
+<dd><p>获取GPA</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回类型:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">get_gpa</span><span class="p">()</span>
+<span class="go">5.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_gpa_under_pku">
+<code class="descname">get_gpa_under_pku</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_gpa_under_pku" title="永久链接至目标">¶</a></dt>
+<dd><p>获取按照北大GPA算法计算的绩点</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回:</th><td class="field-body">北大算法绩点，注意此方法不计算任选课的成绩</td>
+</tr>
+</tbody>
+</table>
+<p>&gt;&gt;&gt;zf.get_gpa_under_pku()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_gpa_under_zju">
+<code class="descname">get_gpa_under_zju</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_gpa_under_zju" title="永久链接至目标">¶</a></dt>
+<dd><p>获取按照浙大GPA算法计算的绩点</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回:</th><td class="field-body">浙大算法绩点，注意此方法不计算任选课的成绩</td>
+</tr>
+</tbody>
+</table>
+<p>&gt;&gt;&gt;zf.get_gpa_under_zju()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_schedule">
+<code class="descname">get_schedule</code><span class="sig-paren">(</span><em>week</em>, <em>year=None</em>, <em>semester=None</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_schedule" title="永久链接至目标">¶</a></dt>
+<dd><p>获取指定学期指定周的课表（不传入年份和学期则默认当前学期), 不推荐使用</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><ul class="first simple">
+<li><strong>year</strong> – 学年 格式为 “2017-2018”</li>
+<li><strong>semester</strong> – 学期 数字1或2</li>
+<li><strong>week</strong> – 周次 数字 1-20</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body"><p class="first last">二维列表schedule，schedule[i][j]代表周i第j节课的课程。 为了方便，i或j为零0的单元均不使用。
+列表的元素为None，代表没有课程，或描述课程信息的dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">get_schedule</span><span class="p">(</span><span class="n">week</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="s1">&#39;2017-2018&#39;</span><span class="p">,</span> <span class="n">semester</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;classroom&#39;: &#39;教4－202&#39;,</span>
+<span class="go">        &#39;name&#39;: &#39;技术经济学&#39;,</span>
+<span class="go">        &#39;teacher&#39;: &#39;储成祥&#39;</span>
+<span class="go">    }</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.list_exam_grades">
+<code class="descname">list_exam_grades</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.list_exam_grades" title="永久链接至目标">¶</a></dt>
+<dd><p>获取等级考试成绩信息</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回类型:</th><td class="field-body">list of dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">列表，内容为每次等级考试的信息</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">list_exam_grades</span><span class="p">()</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;学年&#39;: &#39;2015-2016&#39;,</span>
+<span class="go">        &#39;学期&#39;: 1,</span>
+<span class="go">        &#39;等级考试名称&#39;: &#39;全国大学英语四级考试&#39;,</span>
+<span class="go">        &#39;准考证号&#39;: &#39;320082152113313&#39;,</span>
+<span class="go">        &#39;考试日期&#39;: datetime.datetime(2015, 12, 19, 0, 0),</span>
+<span class="go">        &#39;成绩&#39;: &#39;710&#39;</span>
+<span class="go">        &#39;写作成绩&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;综合成绩&#39;: &#39;&#39;</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.list_exam_scores">
+<code class="descname">list_exam_scores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.list_exam_scores" title="永久链接至目标">¶</a></dt>
+<dd><p>获取参加过的考试的成绩列表</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回类型:</th><td class="field-body">list[dict]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">返回一个包含考试成绩信息字典的列表, 注意是所有参加过的考试</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">list_exam_scores</span><span class="p">()</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;备注&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;学分&#39;: 3.0,</span>
+<span class="go">        &#39;学年&#39;: &#39;2016-2017&#39;,</span>
+<span class="go">        &#39;学期&#39;: 1,</span>
+<span class="go">        &#39;学院名称&#39;: &#39;电子科学与工程学院&#39;,</span>
+<span class="go">        &#39;成绩&#39;: 90.0,</span>
+<span class="go">        &#39;绩点&#39;: 4.0,</span>
+<span class="go">        &#39;补考成绩&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;课程代码&#39;: &#39;B0400111S&#39;,</span>
+<span class="go">        &#39;课程名称&#39;: &#39;模拟电子线路C&#39;,</span>
+<span class="go">        &#39;课程归属&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;课程性质&#39;: &#39;必修&#39;,</span>
+<span class="go">        &#39;课程英文名称&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;辅修标记&#39;: &#39;0&#39;,</span>
+<span class="go">        &#39;重修成绩&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;重修标记&#39;: &#39;0&#39;</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.list_optional_courses">
+<code class="descname">list_optional_courses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.list_optional_courses" title="永久链接至目标">¶</a></dt>
+<dd><p>获取可选课程列表，对应于教务系统 -&gt; 网上选课 -&gt; 学生选课</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">返回类型:</th><td class="field-body">list of dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">可选课程信息列表</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raise:</th><td class="field-body"><a class="reference internal" href="#njupt.exceptions.TemporaryBannedException" title="njupt.exceptions.TemporaryBannedException"><code class="xref py py-class docutils literal notranslate"><span class="pre">njupt.exceptions.TemporaryBannedException</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-njupt.exceptions">
+<span id="id3"></span><h2>通用异常<a class="headerlink" href="#module-njupt.exceptions" title="永久链接至标题">¶</a></h2>
+<dl class="exception">
+<dt id="njupt.exceptions.AuthenticationException">
+<em class="property">exception </em><code class="descclassname">njupt.exceptions.</code><code class="descname">AuthenticationException</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.exceptions.AuthenticationException" title="永久链接至目标">¶</a></dt>
+<dd><p>An Authentication Exception occurred.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="njupt.exceptions.NjuptException">
+<em class="property">exception </em><code class="descclassname">njupt.exceptions.</code><code class="descname">NjuptException</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.exceptions.NjuptException" title="永久链接至目标">¶</a></dt>
+<dd><p>Base class for exceptions in this module.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="njupt.exceptions.TemporaryBannedException">
+<em class="property">exception </em><code class="descclassname">njupt.exceptions.</code><code class="descname">TemporaryBannedException</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.exceptions.TemporaryBannedException" title="永久链接至目标">¶</a></dt>
+<dd><p>Temporary Banned by Server</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="njupt.exceptions.UnauthorizedError">
+<em class="property">exception </em><code class="descclassname">njupt.exceptions.</code><code class="descname">UnauthorizedError</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.exceptions.UnauthorizedError" title="永久链接至目标">¶</a></dt>
+<dd><p>Not authorized Error</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="永久链接至标题">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">索引</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">模块索引</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">搜索页面</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="logo">
+  <a href="#">
+    <img class="logo" src="_static/logo_small.png" title="NJUPT-API" width="150px" />
+  </a>
+</p>
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=gaoliang&repo=NJUPT-API&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+<p>
+  南京邮电大学(NJUPT) 教务系统、奥兰、校园卡、图书馆系统的非官方Python API
+</p>
+  <h3><a href="#">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to NJUPT-API documentation!</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#id1">一卡通API</a></li>
+<li><a class="reference internal" href="#id2">教务处API</a></li>
+<li><a class="reference internal" href="#module-njupt.exceptions">通用异常</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="转向" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, gaoliang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

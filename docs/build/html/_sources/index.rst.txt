@@ -3,35 +3,34 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to NJUPT-API documentation!
+NJUPT-API 使用文档
 =====================================
+
+
+NJUPT-API 是南京邮电大学(NJUPT)的一个第三方Python API，实现了校内常用服务如教务处、一卡通等接口的Python封装。
+
+.. include:: install.rst
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :numbered:
+    :caption: 接口文档
 
-API
-=====================================
+    zhengfang
+    card
+    exceptions
 
-一卡通API
-----------
-.. autoclass:: njupt.Card
-   :members:
+.. toctree::
+    :maxdepth: 2
+    :numbered:
+    :caption: 使用示例
 
-教务处API
----------
-.. autoclass:: njupt.Zhengfang
-   :members:
+    zhengfang_example
+    card_example
 
-通用异常
----------
-.. automodule:: njupt.exceptions
-   :members:
-   :undoc-members:
-
-Indices and tables
+索引
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

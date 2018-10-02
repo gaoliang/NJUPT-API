@@ -4,7 +4,7 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from njupt.base import Model
+from njupt.base import API
 from njupt.exceptions import AuthenticationException, TemporaryBannedException
 from njupt.utils import ZhengfangCaptcha, table_to_list, table_to_dict, login_required
 
@@ -21,7 +21,7 @@ chinese_rome = {
 }
 
 
-class Zhengfang(Model):
+class Zhengfang(API):
     """南邮正方教务
 
     :param str account: 南邮学号
@@ -297,7 +297,7 @@ class Zhengfang(Model):
 
         :return: 浙大算法绩点，注意此方法不计算任选课的成绩
 
-        >>>zf.get_gpa_under_zju()
+        >>> zf.get_gpa_under_zju()
 
         """
         scores = self.list_exam_scores()

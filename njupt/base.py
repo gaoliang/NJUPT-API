@@ -9,9 +9,9 @@ from bs4 import BeautifulSoup
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-class Model(requests.Session):
+class API(requests.Session):
     def __init__(self):
-        super(Model, self).__init__()
+        super(API, self).__init__()
         self.verify = False
 
     def _get_viewstate(self, url=None):

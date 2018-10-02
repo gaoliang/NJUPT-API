@@ -18,7 +18,9 @@ NJUPT-API 是南京邮电大学(NJUPT)的一个第三方Python API，实现了�
 
     zhengfang
     card
+    library
     exceptions
+    changes
 
 .. toctree::
     :maxdepth: 2

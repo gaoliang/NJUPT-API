@@ -4,11 +4,10 @@ verify_ssl = true
 name = "tsinghua"
 
 [packages]
-"beautifulsoup4" = "*"
-lxml = "*"
+"bs4" = "*"
 pillow = "*"
 requests = "*"
-pytz = "*"
+lxml = "*"
 
 [dev-packages]
 pytest = "*"
@@ -17,6 +16,3 @@ pytest-cov = "*"
 responses = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
-
-[requires]
-python_version = "3.6"

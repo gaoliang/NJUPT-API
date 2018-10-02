@@ -1,8 +1,6 @@
 from functools import wraps
 
-from njupt.utils.aolan.aolan_captcha import AolanCaptcha  # noqa
-from njupt.utils.card.card_captcha import CardCaptcha  # noqa
-from njupt.utils.zhengfang.zhengfang_captcha import ZhengfangCaptcha  # noqa
+from njupt.utils.captchas.zhengfang.zhengfang_captcha import ZhengfangCaptcha  # noqa
 from njupt.exceptions import UnauthorizedError
 
 

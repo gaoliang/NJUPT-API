@@ -15,7 +15,7 @@ class LoginType(Enum):
     - EMAIL: 邮箱
     """
     STUDENT_ID = 'cert_no'
-    CARD_ID = 'card_id'
+    CARD_ID = 'bar_no'
     EMAIL = 'email'
 
 
@@ -36,7 +36,7 @@ class Library(API):
         # 信息
         INFO = HOST + '/reader/redr_info_rule.php'
 
-    def __init__(self, username, password, login_type=LoginType.STUDENT_ID):
+    def __init__(self, username, password, login_type=LoginType.CARD_ID):
         super().__init__()
         self.username = username
         self.password = password

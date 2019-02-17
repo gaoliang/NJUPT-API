@@ -175,7 +175,11 @@ class Zhengfang(API):
             ...
         ]
         """
-        soup = self.get_soup(method='get', url=self.URLs.SELECTED_COURSES.format(account=self.account))
+        r = self.get(url=self.URLs.SELECTED_COURSES.format(account=self.account))
+        # soup = self.get_soup(method='get', url=self.URLs.SELECTED_COURSES.format(account=self.account))
+        # 编码参考：
+        # http://bbs.chinaunix.net/thread-3610023-1-1.html
+        soup = BeautifulSoup(r.content, fromEncoding="gb18030")
         trs = soup.select('#DBGrid > tr')[1:]
         courses = []
         for tr in trs:

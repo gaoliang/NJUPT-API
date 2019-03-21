@@ -13,16 +13,19 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = 'njupt'
-DESCRIPTION = 'NJUPT api for humans.'
+DESCRIPTION = 'Python API Wrappers for NJUPT.'
 URL = 'https://github.com/gaoliang/NJUPT-API'
 EMAIL = 'me@gaoliang.im'
 AUTHOR = 'Gao Liang'
 REQUIRES_PYTHON = '>=3.0.0'
-VERSION = '0.1.5'
+VERSION = '0.2.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'requests', 'bs4', 'lxml', 'pillow',
+    'requests >= 2.20.0',
+    'bs4',
+    'lxml',
+    'pillow',
 ]
 
 # The rest you shouldn't have to touch too much :)

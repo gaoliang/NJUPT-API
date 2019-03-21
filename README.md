@@ -1,7 +1,5 @@
 
-# 南京邮电大学(NJUPT) 第三方Python API
-
-NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简洁API接口，以便能够在此基础上进行扩展开发。
+# Python API Wrappers for NJUPT.   南京邮电大学网站接口 Python 封装
 
 [【阅读文档】](http://gaoliang.github.io/NJUPT-API)
 
@@ -32,7 +30,6 @@ NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简�
 
 ```bash
 pipenv install njupt # or pip install njupt
-✨🍰✨
 # 仅支持python3
 ```
 

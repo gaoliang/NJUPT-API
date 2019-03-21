@@ -6,7 +6,7 @@ name = "tsinghua"
 [packages]
 "bs4" = "*"
 pillow = "*"
-requests = "*"
+requests = ">=2.20.0"
 lxml = "*"
 
 [dev-packages]
@@ -17,3 +17,4 @@ responses = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 twine = "*"
+ipython = "*"

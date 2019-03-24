@@ -47,7 +47,7 @@ class AolanCaptcha:
 
     def crack(self):
         # 装载训练数据集
-        with open(os.path.join(current_dir, 'imageset.dat'), 'rb+') as f:
+        with open(os.path.join(current_dir, 'imageset.dat'), 'rb') as f:
             imageset = pickle.load(f)
         # 对验证码图片进行切割
         result = []

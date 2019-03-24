@@ -57,7 +57,7 @@ class ZhengfangCaptcha:
     def crack(self):
         result = []
         # 加载数据
-        with open(os.path.join(current_dir, 'image_data.json'), 'rb+') as f:
+        with open(os.path.join(current_dir, 'image_data.json'), 'rb') as f:
             image_data = json.load(f)
         for letter in self.handle_split_image():
             letter_vector = build_vector(letter)

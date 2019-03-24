@@ -44,6 +44,8 @@ extensions = [
     'sphinx.ext.autodoc',
 ]
 
+html_logo = "_static/logo_tiny.png"
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -76,7 +78,8 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
+# html_theme = 'alabaster'
 # html_theme = 'flask'
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -100,9 +103,6 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-html_sidebars = {
-    '**': ['sidebarlogo.html', 'localtoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']
-}
 html_show_sourcelink = False
 
 # -- Options for HTMLHelp output ---------------------------------------------

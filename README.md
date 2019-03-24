@@ -1,29 +1,12 @@
 
-# NJUPT-API 简介
+# Python API Wrappers for NJUPT.   南京邮电大学网站接口 Python 封装
 
-NJUPT-API 的初衷是希望为NJUPT的各个系统提供一套跨系统的简洁API接口，以便能够在此基础上进行扩展开发。
+[【阅读文档】](http://gaoliang.github.io/NJUPT-API)
 
-## 谁在使用？
+## 功能特性
 
-- [NJUPT-iCal](https://github.com/shaoye/NJUPT-iCal) : 生成课表ics文件并导入系统日历
+[正方教务](#正方教务)
 
-## 安装
-
-```bash
-pipenv install njupt # or pip install njupt
-✨🍰✨
-# 仅支持python3
-```
-
-## API文档
-
-[http://gaoliang.github.io/NJUPT-API](http://gaoliang.github.io/NJUPT-API)
-
-## 目前实现的功能
-
-[正方系统](#正方系统)
-
-- [登录正方](#登录正方)
 - [获取课程成绩和绩点](#获取课程成绩和绩点)
 - [获取等级考试信息](#获取等级考试信息)
 - [获取全部课程](#获取全部课程)
@@ -32,7 +15,6 @@ pipenv install njupt # or pip install njupt
 
 [校园卡系统](#校园卡系统)
 
-- [登录校园卡](#登录校园卡)
 - [获取校园卡余额](#获取校园卡余额)
 - [充值校园卡](#充值校园卡)
 - [获取账单](#获取账单)
@@ -40,7 +22,18 @@ pipenv install njupt # or pip install njupt
 - [充值网费](#充值网费)
 - [充值寝室电费](#充值寝室电费)
 
-## Examples
+[图书馆系统](#图书馆系统)
+
+- [获取基本信息](#获取基本信息)
+
+## 安装
+
+```bash
+pipenv install njupt # or pip install njupt
+# 仅支持python3
+```
+
+## 使用示例
 
 这里是一些简单的使用案例
 ```python
@@ -74,10 +67,8 @@ card = Card(account='11020xxxxxxxxxx',password='passwd')
     'Msg' : '缴费成功！'
 }
 ```
-其他api参见[http://gaoliang.github.io/NJUPT-API](http://gaoliang.github.io/NJUPT-API)
+更多示例参见 [examples](examples/)
 
+## 谁在使用？
 
-
-## todos
-
-图书馆系统和奥兰系统的常用接口
+- [NJUPT-iCal](https://github.com/shaoye/NJUPT-iCal) : 生成课表ics文件并导入系统日历

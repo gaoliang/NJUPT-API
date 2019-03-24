@@ -5,8 +5,9 @@ import json
 import re
 
 from njupt.exceptions import NjuptException, AuthenticationException
-from njupt.base import Model
-from njupt.utils import CardCaptcha, login_required
+from njupt.base import API
+from njupt.utils import login_required
+from njupt.utils.captchas.card import CardCaptcha
 
 AIDS = {
     'elec_xianlin': '0030000000005101',
@@ -15,7 +16,7 @@ AIDS = {
 }
 
 
-class Card(Model):
+class Card(API):
     """
     一卡通相关接口
 

@@ -1,4 +1,8 @@
-recursive-include njupt/utils */*.dat
-include requirements.txt
-include README.md
+# Include the README
+include *.md
+
+# Include the license file
 include LICENSE
+
+# Include the data files
+recursive-include njupt/utils */*.json

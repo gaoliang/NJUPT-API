@@ -4,7 +4,7 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from njupt.base import Model
+from njupt.base import API
 from njupt.exceptions import AuthenticationException, TemporaryBannedException
 from njupt.utils import ZhengfangCaptcha, table_to_list, table_to_dict, login_required
 
@@ -21,7 +21,7 @@ chinese_rome = {
 }
 
 
-class Zhengfang(Model):
+class Zhengfang(API):
     """南邮正方教务
 
     :param str account: 南邮学号
@@ -175,7 +175,11 @@ class Zhengfang(Model):
             ...
         ]
         """
-        soup = self.get_soup(method='get', url=self.URLs.SELECTED_COURSES.format(account=self.account))
+        r = self.get(url=self.URLs.SELECTED_COURSES.format(account=self.account))
+        # soup = self.get_soup(method='get', url=self.URLs.SELECTED_COURSES.format(account=self.account))
+        # 编码参考：
+        # http://bbs.chinaunix.net/thread-3610023-1-1.html
+        soup = BeautifulSoup(r.content, fromEncoding="gb18030")
         trs = soup.select('#DBGrid > tr')[1:]
         courses = []
         for tr in trs:
@@ -303,7 +307,7 @@ class Zhengfang(Model):
 
         :return: 浙大算法绩点，注意是计算了任选课和重修课的成绩
 
-        >>>zf.get_gpa_under_zju()
+        >>> zf.get_gpa_under_zju()
 
         """
         scores = self.list_exam_scores()

@@ -1,6 +1,12 @@
 Changelog
 ====================
 
+Version 0.2.2
+--------------
+
+- 支持早锻炼系统 :class:`njupt.RunningMan`
+
+
 Version 0.1.5
 --------------
 

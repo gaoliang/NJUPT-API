@@ -264,12 +264,12 @@ class Zhengfang(API):
     def get_gpa_under_pku(self):
         """获取按照北大GPA算法计算的绩点
 
-        :return: 北大算法绩点，注意此方法不计算任选课的成绩
+        :return: 北大算法绩点，注意是计算了任选课和重修课的成绩
 
         >>>zf.get_gpa_under_pku()
         """
         scores = self.list_exam_scores()
-        effective_courses = [score for score in scores if score['课程性质'] != '任选']
+        effective_courses = [score for score in scores]
         total_credits = 0
         academic_credits = 0
         for score in effective_courses:
@@ -283,6 +283,12 @@ class Zhengfang(API):
                 score['成绩'] = 60
             elif score['成绩'] == '不合格':
                 score['成绩'] = 59
+            if score['重修成绩'] != '':
+                rehearsal_course = score
+                rehearsal_course['成绩'] = float(rehearsal_course['重修成绩'])
+                rehearsal_course['重修成绩'] = ''
+                effective_courses.append(rehearsal_course)
+
         for score in effective_courses:
             if score['成绩'] > 60:
                 score['绩点'] = float('%.2f' % (4 - 3 * (100 - score['成绩']) ** 2 / 1600))
@@ -299,13 +305,13 @@ class Zhengfang(API):
     def get_gpa_under_zju(self):
         """获取按照浙大GPA算法计算的绩点
 
-        :return: 浙大算法绩点，注意此方法不计算任选课的成绩
+        :return: 浙大算法绩点，注意是计算了任选课和重修课的成绩
 
         >>> zf.get_gpa_under_zju()
 
         """
         scores = self.list_exam_scores()
-        effective_courses = [score for score in scores if score['课程性质'] != '任选']
+        effective_courses = [score for score in scores]
         total_credits = 0
         academic_credits = 0
         for score in effective_courses:
@@ -319,6 +325,12 @@ class Zhengfang(API):
                 score['成绩'] = 60
             elif score['成绩'] == '不合格':
                 score['成绩'] = 59
+            if score['重修成绩'] != '':
+                rehearsal_course = score
+                rehearsal_course['成绩'] = float(rehearsal_course['重修成绩'])
+                rehearsal_course['重修成绩'] = ''
+                effective_courses.append(rehearsal_course)
+
         for score in effective_courses:
             if score['成绩'] >= 85:
                 score['绩点'] = 4.0
@@ -326,7 +338,7 @@ class Zhengfang(API):
                 score['绩点'] = (score['成绩'] - 60) * 0.1 + 1.5
             else:
                 if score['补考成绩'] == '及格':
-                    score['绩点'] = 1.0
+                    score['绩点'] = 1.5
                 else:
                     score['绩点'] = 0.0
             academic_credits += score['学分'] * score['绩点']

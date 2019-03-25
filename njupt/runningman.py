@@ -4,7 +4,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 from njupt.base import API
-from njupt.exceptions import NjuptException
+from njupt.exceptions import NjuptException, AuthenticationException
 
 
 class RunningMan(API):
@@ -12,6 +12,8 @@ class RunningMan(API):
 
     :param str student_id: 学号
     :param str name: 姓名
+
+    :raise: :class:`njupt.exceptions.AuthenticationException`
 
     >>> rm = RunningMan(student_id='B18888888', name='杨震')
     """
@@ -29,6 +31,9 @@ class RunningMan(API):
 
         :rtype: dict
 
+        >>> rm.check()
+        {'origin_number': 10, 'extra_number': 1, 'date_list': []}
+
         """
         url = 'http://zccx.tyb.njupt.edu.cn/student'
         data = {
@@ -38,7 +43,7 @@ class RunningMan(API):
         response = self.post(url=url, data=data, allow_redirects=False)
         status = response.status_code
         if status == 302:
-            raise NjuptException("学号、姓名不对应")
+            raise AuthenticationException("学号、姓名不对应")
 
         soup = BeautifulSoup(response.content, 'lxml')
 

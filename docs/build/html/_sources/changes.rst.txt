@@ -1,6 +1,12 @@
 Changelog
 ====================
 
+Version 0.2.3
+--------------
+
+- 早锻炼系统 :class:`njupt.RunningMan` check时返回的打卡记录感知时区(UTC+8)
+
+
 Version 0.2.2
 --------------
 

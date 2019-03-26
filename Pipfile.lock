@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c877a486e83ae47a953f8d8c3b80de44c53c4020c74df1b0497ed931fe8cc6c3"
+            "sha256": "cfa92126d85c476695706d0a619df4fdd8da5c78df5d914738c4fbb23ddcdb6d"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -117,6 +117,14 @@
             ],
             "index": "tsinghua",
             "version": "==5.4.1"
+        },
+        "pytz": {
+            "hashes": [
+                "sha256:32b0891edff07e28efe91284ed9c31e123d84bea3fd98e1f72be2508f43ef8d9",
+                "sha256:d5f05e487007e29e03409f9398d074e158d920d36eb82eaf66fb1136b0c5374c"
+            ],
+            "index": "tsinghua",
+            "version": "==2018.9"
         },
         "requests": {
             "hashes": [
@@ -477,6 +485,7 @@
                 "sha256:32b0891edff07e28efe91284ed9c31e123d84bea3fd98e1f72be2508f43ef8d9",
                 "sha256:d5f05e487007e29e03409f9398d074e158d920d36eb82eaf66fb1136b0c5374c"
             ],
+            "index": "tsinghua",
             "version": "==2018.9"
         },
         "readme-renderer": {

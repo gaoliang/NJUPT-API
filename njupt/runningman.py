@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 
+import pytz
 from bs4 import BeautifulSoup
 
 from njupt.base import API
@@ -24,6 +25,7 @@ class RunningMan(API):
         self.name = name
         self.digit_pattern = re.compile(r'\d+')
         self.space_pattern = re.compile(r'\s+')
+        self.timezone = pytz.timezone('Asia/Shanghai')
 
     def check(self):
         """
@@ -49,9 +51,9 @@ class RunningMan(API):
 
         number_text = soup.select('.list-group')[0].get_text()
 
-        origin_number = self.digit_pattern.findall(number_text)[0]
+        origin_number = int(self.digit_pattern.findall(number_text)[0])
         try:
-            extra_number = self.digit_pattern.findall(number_text)[1]
+            extra_number = int(self.digit_pattern.findall(number_text)[1])
         except IndexError:
             extra_number = 0
 
@@ -61,6 +63,7 @@ class RunningMan(API):
             for item in raw_data_list:
                 date_str = re.sub(self.space_pattern, '', item.get_text())
                 date = datetime.strptime(date_str, '%Y年%m月%d日%H时%M分')
+                date = self.timezone.localize(date)
                 date_list.append(date)
 
         except AttributeError:

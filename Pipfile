@@ -8,6 +8,7 @@ name = "tsinghua"
 pillow = "*"
 requests = ">=2.20.0"
 lxml = "*"
+pytz = "*"
 
 [dev-packages]
 pytest = "*"

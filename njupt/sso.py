@@ -25,7 +25,7 @@ class SSOClient(requests.Session):
         self.password = password
         self.headers = headers
 
-    def login(self, username, password):
+    def login(self):
         login_page_res = self.get('http://202.119.226.235/cas/login')
         login_soup = BeautifulSoup(login_page_res.content, 'lxml')
         execution = login_soup.select_one("#fm1 > input[name=execution]").get('value')
@@ -34,10 +34,10 @@ class SSOClient(requests.Session):
         m = res.json()['modulus']
         e = res.json()['exponent']
         pub_key = Encrypt(e=e, m=m)
-        password = pub_key.encrypt(password[::-1])
+        password = pub_key.encrypt(self.password[::-1])
         self.get('http://202.119.226.235/cas/kaptcha?time={}'.format(int(time.time())))
         data = {
-            'username': username,
+            'username': self.username,
             'password': password,
             'authcode': '',
             'execution': execution,

@@ -7,5 +7,5 @@ from njupt import Zhengfang
 def zhengfang():
     zhengfang = Zhengfang()
     zhengfang.account = 'account'
-    zhengfang.verify = True
+    zhengfang.verified = True
     return zhengfang

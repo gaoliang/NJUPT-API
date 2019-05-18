@@ -1,5 +1,4 @@
 # encoding: utf-8
-from io import BytesIO
 
 import requests
 import urllib3
@@ -12,7 +11,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class API(requests.Session):
     def __init__(self):
         super(API, self).__init__()
-        self.verify = False
+        self.verified = False
 
     def _get_viewstate(self, url=None):
         self.headers['Referer'] = url

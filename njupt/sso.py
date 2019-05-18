@@ -3,6 +3,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
+from njupt import Zhengfang
 from njupt.utils.rsa_encrypt import Encrypt
 
 headers = {
@@ -24,6 +25,8 @@ class SSOClient(requests.Session):
         self.username = username
         self.password = password
         self.headers = headers
+        self.login()
+        self.zf = Zhengfang(self.cookies, username)
 
     def login(self):
         login_page_res = self.get('http://202.119.226.235/cas/login')

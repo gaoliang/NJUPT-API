@@ -3,7 +3,7 @@ import os
 from io import BytesIO
 
 import requests
-from PIL import Image
+# from PIL import Image
 
 from njupt.utils.captchas import distance_hanmming, build_vector, rotate_img
 
@@ -83,6 +83,6 @@ if __name__ == "__main__":
     from njupt import Zhengfang
 
     r = requests.get(Zhengfang.URLs.CAPTCHA)
-    im = Image.open(BytesIO(r.content))
-    im.show()
-    print(ZhengfangCaptcha(im))
+    # im = Image.open(BytesIO(r.content))
+    # im.show()
+    # print(ZhengfangCaptcha(im))

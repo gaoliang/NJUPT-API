@@ -5,10 +5,10 @@ name = "tsinghua"
 
 [packages]
 "bs4" = "*"
-pillow = "*"
 requests = ">=2.20.0"
 lxml = "*"
 pytz = "*"
+rsa = "*"
 
 [dev-packages]
 pytest = "*"

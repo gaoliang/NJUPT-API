@@ -1,7 +1,7 @@
 import json
 import os
 
-from PIL import Image
+# from PIL import Image
 
 from njupt.utils.captchas import distance_hanmming, build_vector
 
@@ -62,7 +62,7 @@ class CardCaptcha:
         return self.crack()
 
 
-if __name__ == "__main__":
-    im = Image.open("captchas/12272.gif")
-    im.show()
-    print(CardCaptcha(im).crack())
+# if __name__ == "__main__":
+    # im = Image.open("captchas/12272.gif")
+    # im.show()
+    # print(CardCaptcha(im).crack())

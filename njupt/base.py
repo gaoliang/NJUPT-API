@@ -3,7 +3,7 @@ from io import BytesIO
 
 import requests
 import urllib3
-from PIL import Image
+# from PIL import Image
 from bs4 import BeautifulSoup
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -38,7 +38,7 @@ class API(requests.Session):
         """
         try:  # 出现网络连接问题,直接在该处抛出错误
             r = getattr(self, method)(url, json=json, data=data, params=params, **kwargs)
-            return Image.open(BytesIO(r.content))
+            # return Image.open(BytesIO(r.content))
         except ConnectionError:
             raise ConnectionError("请检查网络连接")
 

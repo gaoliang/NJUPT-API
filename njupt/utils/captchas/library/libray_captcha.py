@@ -3,7 +3,7 @@ import os
 from io import BytesIO
 
 import requests
-from PIL import Image
+# from PIL import Image
 
 from njupt.utils.captchas import distance_hanmming, build_vector
 
@@ -47,8 +47,8 @@ class LibraryCaptcha:
 if __name__ == "__main__":
     from njupt import Library
 
-    r = requests.get(Library.URLs.CAPTCHA)
-    im = Image.open(BytesIO(r.content))
-    im.show()
-    captcha = LibraryCaptcha(image=im)
-    print(captcha.crack())
+    # r = requests.get(Library.URLs.CAPTCHA)
+    # im = Image.open(BytesIO(r.content))
+    # im.show()
+    # captcha = LibraryCaptcha(image=im)
+    # print(captcha.crack())

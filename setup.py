@@ -18,14 +18,14 @@ URL = 'https://github.com/gaoliang/NJUPT-API'
 EMAIL = 'me@gaoliang.im'
 AUTHOR = 'Gao Liang'
 REQUIRES_PYTHON = '>=3.0.0'
-VERSION = '0.2.3'
+VERSION = '1.0.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
     'requests >= 2.20.0',
     'bs4',
     'lxml',
-    'pillow',
+    'pytz'
 ]
 
 # The rest you shouldn't have to touch too much :)

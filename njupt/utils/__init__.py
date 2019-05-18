@@ -1,7 +1,6 @@
 from functools import wraps
 
 from njupt.utils.captchas.zhengfang.zhengfang_captcha import ZhengfangCaptcha  # noqa
-from njupt.exceptions import UnauthorizedError
 
 
 def table_to_list(table, remove_index_list=None, index_cast_dict=None):
@@ -68,8 +67,8 @@ def table_to_dict(table, remove_index_list=None, index_cast_dict=None):
 def login_required(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
-        if self.verify:
-            return func(self, *args, **kwargs)
-        else:
-            raise UnauthorizedError('login required!')
+        if not self.verified:
+            self.login()
+        return func(self, *args, **kwargs)
+
     return wrapper

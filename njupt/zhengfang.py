@@ -23,6 +23,7 @@ chinese_rome = {
 
 class Zhengfang:
     """南邮正方教务, sso登录方式参见 :class:`njupt.sso.SSO`
+
     >>> # 👍 推荐使用sso登录来获取正方实例，速度更快, 参见
     >>> from njupt import SSO
     >>> sso = SSO(username='B12345678', password='abcdefgh')

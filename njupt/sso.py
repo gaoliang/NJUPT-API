@@ -7,15 +7,14 @@ from njupt.utils.rsa_encrypt import encrypt
 
 class SSO(APIWrapper):
     """
-    my.njupt.edu.cn统一认证系统的封装， 在这里可以实现无验证码跳转到教务系统， 一卡通系统(限内网)
+    my.njupt.edu.cn 统一认证系统的封装，在这里可以实现无验证码跳转到教务系统， 一卡通系统(限内网)
 
     :param username: 学生登录账号为学号，教工登录账号为8位工号。
-    :param password 智慧校园密码，没修改过的为初始密码（身份证号码后六位）。
+    :param password: 智慧校园密码，没修改过的为初始密码（身份证号码后六位）。
 
     >>> from njupt import SSO
     >>> sso = SSO('B12345678', 'abcedhgh')
     >>> zf = sso.zhengfang()
-
     """
 
     def __init__(self, username, password):

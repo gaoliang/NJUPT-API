@@ -1,6 +1,6 @@
 
 # Python API Wrappers for NJUPT.   南京邮电大学网站接口 Python 封装
-
+[![Build Status](https://travis-ci.com/gaoliang/NJUPT-API.svg?branch=develop)](https://travis-ci.com/gaoliang/NJUPT-API)
 [【阅读文档】](http://gaoliang.github.io/NJUPT-API)
 
 ## 功能特性

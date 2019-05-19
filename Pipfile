@@ -9,6 +9,7 @@ requests = ">=2.20.0"
 lxml = "*"
 pytz = "*"
 rsa = "*"
+pillow = "*"
 
 [dev-packages]
 pytest = "*"
@@ -19,3 +20,4 @@ sphinx = "*"
 sphinx-rtd-theme = "*"
 twine = "*"
 ipython = "*"
+travis-sphinx = "*"

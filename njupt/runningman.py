@@ -4,11 +4,11 @@ from datetime import datetime
 import pytz
 from bs4 import BeautifulSoup
 
-from njupt.base import API
+from njupt.base import APIWrapper
 from njupt.exceptions import NjuptException, AuthenticationException
 
 
-class RunningMan(API):
+class RunningMan(APIWrapper):
     """ 体育部早操查询接口
 
     :param str student_id: 学号

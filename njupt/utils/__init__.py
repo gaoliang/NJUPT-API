@@ -68,7 +68,7 @@ def login_required(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         if not self.verified:
-            self.login()
+            self.login_by_sso()
         return func(self, *args, **kwargs)
 
     return wrapper

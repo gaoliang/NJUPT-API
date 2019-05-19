@@ -1,6 +1,6 @@
 from enum import Enum
 
-from njupt.base import API
+from njupt.base import APIWrapper
 from njupt.exceptions import AuthenticationException
 from njupt.utils import login_required
 from njupt.utils.captchas.library.libray_captcha import LibraryCaptcha
@@ -19,7 +19,7 @@ class LoginType(Enum):
     EMAIL = 'email'
 
 
-class Library(API):
+class Library(APIWrapper):
     """图书馆
 
     :param username: 用户名

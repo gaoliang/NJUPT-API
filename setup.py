@@ -25,7 +25,8 @@ REQUIRED = [
     'requests >= 2.20.0',
     'bs4',
     'lxml',
-    'pytz'
+    'pytz',
+    'pillow',
 ]
 
 # The rest you shouldn't have to touch too much :)

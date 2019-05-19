@@ -4,9 +4,9 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from njupt.base import API
-from njupt.exceptions import TemporaryBannedException
-from njupt.utils import table_to_list, table_to_dict, login_required
+from njupt.base import APIWrapper
+from njupt.exceptions import TemporaryBannedException, AuthenticationException
+from njupt.utils import table_to_list, table_to_dict, login_required, ZhengfangCaptcha
 
 week_re = re.compile(r'第(\d+)-(\d+)周')
 courser_index_re = re.compile(r'第(\d+(?:,\d+)*)节')
@@ -21,10 +21,12 @@ chinese_rome = {
 }
 
 
-class Zhengfang(API):
+class Zhengfang:
     """南邮正方教务
 
-    :param str username: 南邮学号
+    :param sso_session: 使用单点登录跳转时的sso session实例, 传递此参数后，无需传递username和password
+    :param str username: 南邮学号，仅当使用账号密码登录
+    :param str password: 正方教务密码，仅当使用账号密码登录时需要
     """
 
     class URLs:
@@ -36,13 +38,54 @@ class Zhengfang(API):
         SELECTED_COURSES = HOST + '/xsxkqk.aspx?xh={username}&gnmkdm=N121615'
         OPTIONAL_COURSES = HOST + '/xsxk.aspx?xh={username}&gnmkdm=N121101'
         COURSE_INFO = HOST + '/kcxx.aspx?xh={username}&kcdm={course_code}&xkkh=%26nbsp%3bk'
+        # 教务系统登录
+        USERNAME_LOGIN = HOST + '/default2.aspx'
+        # 教务系统验证码
+        CAPTCHA = HOST + '/CheckCode.aspx'
+        # SSO 跳转
+        SSO_LOGIN = 'http://202.119.226.235:8017/im/application/sso.zf?login=7CF3D066D16B5374E053D8E277CAC84D'
 
-    def __init__(self, sso_cookies, username):
-        super(Zhengfang, self).__init__()
-        self.sso_url = 'http://202.119.226.235:8017/im/application/sso.zf?login=7CF3D066D16B5374E053D8E277CAC84D'
-        self.cookies = sso_cookies
-        self.username = username
-        self.verified = False
+    def __init__(self, username=None, password=None, sso_session=None):
+        super().__init__()
+        if sso_session:
+            self.s = sso_session
+            self.username = sso_session.username
+            self.login_by_sso()
+            self.verified = True
+        else:
+            self.s = APIWrapper()
+            self.username = username
+            self.password = password
+            self.login_by_username()
+            self.verified = True
+
+    def login_by_sso(self):
+        self.s.get(self.URLs.SSO_LOGIN)
+        self.verified = True
+
+    def login_by_username(self):
+        captcha_code = ZhengfangCaptcha(self.s.get_image(self.URLs.CAPTCHA)).crack()
+        data = {
+            "__VIEWSTATE": self.s._get_viewstate(self.URLs.USERNAME_LOGIN),
+            'txtUserName': self.username,
+            'TextBox2': self.password,
+            'RadioButtonList1': "%D1%A7%C9%FA",
+            "txtSecretCode": captcha_code,
+            "Button1": "",
+            "hidPdrs": "",
+            "hidsc": ""
+        }
+        r = self.s.post(url=self.URLs.USERNAME_LOGIN, data=data)
+        if r.ok:
+            if "请到信息维护中完善个人联系方式" in r.text:
+                self.verified = True
+                return {'success': True, 'msg': '登录成功'}
+            elif "密码错误" in r.text:
+                raise AuthenticationException('密码错误')
+            elif "验证码不正确" in r.text:
+                return self.login_by_username()
+            else:
+                raise AuthenticationException('未知错误')
 
     @login_required
     def list_exam_grades(self):
@@ -66,7 +109,7 @@ class Zhengfang(API):
             ...
         ]
         """
-        soup = self.get_soup(method='get', url=self.URLs.GRADE.format(username=self.username))
+        soup = self.s.get_soup(method='get', url=self.URLs.GRADE.format(username=self.username))
         table = soup.select_one('#DataGrid1')
         result = table_to_list(table, index_cast_dict={
             1: int,
@@ -83,14 +126,14 @@ class Zhengfang(API):
         >>> zf.get_gpa()
         5.0
         """
-        view_state = self._get_viewstate(url=self.URLs.SCORE.format(username=self.username))
+        view_state = self.s._get_viewstate(url=self.URLs.SCORE.format(username=self.username))
         data = {
             'ddlXN': '',
             'ddlXQ': '',
             '__VIEWSTATE': view_state,
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
-        soup = self.get_soup(method='post', url=self.URLs.SCORE.format(username=self.username), data=data)
+        soup = self.s.get_soup(method='post', url=self.URLs.SCORE.format(username=self.username), data=data)
         return float(soup.select_one('#pjxfjd').text[7:])
 
     @login_required
@@ -117,7 +160,7 @@ class Zhengfang(API):
         if year and semester:
             pass
         else:
-            r = self.get(url=self.URLs.SCHEDULE.format(username=self.username))
+            r = self.s.get(url=self.URLs.SCHEDULE.format(username=self.username))
             soup = BeautifulSoup(r.text.replace('<br>', '\n'), 'lxml')
             trs = soup.select("#Table1 > tr")
             for index, tr in enumerate(trs):
@@ -168,11 +211,11 @@ class Zhengfang(API):
             ...
         ]
         """
-        r = self.get(url=self.URLs.SELECTED_COURSES.format(username=self.username))
+        r = self.s.get(url=self.URLs.SELECTED_COURSES.format(username=self.username))
         # soup = self.get_soup(method='get', url=self.URLs.SELECTED_COURSES.format(username=self.username))
         # 编码参考：
         # http://bbs.chinaunix.net/thread-3610023-1-1.html
-        soup = BeautifulSoup(r.content, fromEncoding="gb18030")
+        soup = BeautifulSoup(r.content, from_encoding="gb18030", features='lxml')
         trs = soup.select('#DBGrid > tr')[1:]
         courses = []
         for tr in trs:
@@ -237,14 +280,14 @@ class Zhengfang(API):
         ]
 
         """
-        viewstate = self._get_viewstate(url=self.URLs.SCORE.format(username=self.username))
+        viewstate = self.s._get_viewstate(url=self.URLs.SCORE.format(username=self.username))
         data = {
             'ddlXN': '',
             'ddlXQ': '',
             '__VIEWSTATE': viewstate,
             'Button2': '%D4%DA%D0%A3%D1%A7%CF%B0%B3%C9%BC%A8%B2%E9%D1%AF'
         }
-        soup = self.get_soup(method='post', url=self.URLs.SCORE.format(username=self.username), data=data)
+        soup = self.s.get_soup(method='post', url=self.URLs.SCORE.format(username=self.username), data=data)
         table = soup.select_one('#Datagrid1')
         return table_to_list(table, index_cast_dict={
             1: int,
@@ -346,7 +389,7 @@ class Zhengfang(API):
         :return: 可选课程信息列表
         :raise: :class:`njupt.exceptions.TemporaryBannedException`
         """
-        soup = self.get_soup(self.URLs.OPTIONAL_COURSES.format(username=self.username))
+        soup = self.s.get_soup(self.URLs.OPTIONAL_COURSES.format(username=self.username))
         if len(str(soup)) < 100:
             raise TemporaryBannedException('选课三秒防刷')
         table = soup.select_one('#kcmcgrid')
@@ -365,10 +408,6 @@ class Zhengfang(API):
         :rtype: dict
 
         """
-        soup = self.get_soup(self.URLs.COURSE_INFO.format(username=self.username, course_code=courser_code))
+        soup = self.s.get_soup(self.URLs.COURSE_INFO.format(username=self.username, course_code=courser_code))
         table = soup.select_one('#Table1')
         return table_to_dict(table)
-
-    def login(self):
-        self.get(self.sso_url)
-        self.verified = True

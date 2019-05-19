@@ -5,7 +5,7 @@ import json
 import re
 
 from njupt.exceptions import NjuptException, AuthenticationException
-from njupt.base import API
+from njupt.base import APIWrapper
 from njupt.utils import login_required
 from njupt.utils.captchas.card import CardCaptcha
 
@@ -16,16 +16,16 @@ AIDS = {
 }
 
 
-class Card(API):
+class Card(APIWrapper):
     """
     一卡通相关接口
 
-    :param str account: 一卡通卡号
+    :param str username: 一卡通卡号
     :param str password: 一卡通查询密码
 
     :raise: :class:`njupt.exceptions.AuthenticationException`
 
-    >>> card = Card(account='B15080500', password='sssss')
+    >>> card = Card(username='110201500111111', password='sssss')
     """
 
     class URLs:
@@ -47,14 +47,15 @@ class Card(API):
         # 电费充值
         ELEC_PAY = HOST + '/Tsm/Elec_Pay'
 
-    def __init__(self, account=None, password=None):
+    def __init__(self, username=None, password=None):
         super(Card, self).__init__()
         self.aid = None
         # 该系统使用aid区分业务类型
         self.inner_account = None
-        if account and password:
-            self.account = account
-            self._login(account, password)
+        self.verified = False
+        if username and password:
+            self.username = username
+            self._login(username, password)
 
     def _login(self, account, password):
         captcha_code = CardCaptcha(self.get_image(self.URLs.CAPTCHA)).crack()
@@ -74,7 +75,7 @@ class Card(API):
             return self._login(account, password)
         result['success'] = not result['code']
         if result['success']:
-            self.verify = True
+            self.verified = True
         else:
             raise AuthenticationException(result['msg'])
         return result

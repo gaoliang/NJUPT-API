@@ -1,0 +1,10 @@
+[[accounts]]
+username = "B12345678" # my.njupt.edu.cn 账号
+password = "!823%U*gcw98Xx@" # my.njupt.edu.cn 密码
+ftqq_token = 'SCdwdwdwdksadkskdsaldkls;akf;sakf;lsa' # server酱微信推送token
+
+# 可配置多组
+# [[accounts]]
+# username = "B12345678" # my.njupt.edu.cn 账号
+# password = "password" # my.njupt.edu.cn 密码
+# ftqq_token = '' # server酱微信推送token

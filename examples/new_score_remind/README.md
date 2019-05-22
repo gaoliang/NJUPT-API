@@ -1,8 +1,11 @@
-## 出成绩邮件通知
-
-有课程出成绩的时候给你发邮件通知你。
-
-搭配crontab使用，心理承受能力不佳者请勿使用😵
+## 出成绩微信通知
+有课程出成绩的时候利用server酱微信通知你。心理承受能力不佳者请勿使用😵
 
 ## 配置
-在accounts.json里配置好用户名，密码和用来接收通知的邮箱。可以配置多组
+1. 配置accounts.toml
+2. 安装依赖
+```bash
+pip install -r requirements.txt
+```
+3. 配置 Cron Job 定时运行 main.py
+

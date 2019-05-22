@@ -10,4 +10,4 @@ script:
     - travis-sphinx build -s docs
 
 after_success:
-    - travis-sphinx deploy -b develop -c njupt-api.save1s.com
+    - travis-sphinx deploy -b master -c njupt-api.save1s.com

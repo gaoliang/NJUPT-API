@@ -1,6 +1,12 @@
 Changelog
 ====================
 
+Version 0.3.0
+--------------
+
+- 支持SSO登录正方 :class:`njupt.SSO` 支持利用my.njupt.edu.cn进行sso登录
+
+
 Version 0.2.3
 --------------
 

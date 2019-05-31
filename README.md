@@ -1,5 +1,7 @@
 
 # Python API Wrappers for NJUPT.   南京邮电大学网站接口 Python 封装
+
+## 注意：由于肯定是“技术升级”的原因, 现在你无法外网使用它。等几天，或者内网调用
 [![Build Status](https://travis-ci.com/gaoliang/NJUPT-API.svg?branch=master)](https://travis-ci.com/gaoliang/NJUPT-API)
 
 [【阅读文档】](http://gaoliang.github.io/NJUPT-API)

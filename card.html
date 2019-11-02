@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. 一卡通接口 &mdash; NJUPT-API  文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="3. 图书馆接口" href="library.html" />
+    <link rel="prev" title="1. 教务处接口" href="zhengfang.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NJUPT-API
+          
+
+          
+            
+            <img src="_static/logo_tiny.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">接口文档</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="zhengfang.html">1. 教务处接口</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. 一卡通接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">3. 图书馆接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runningman.html">4. 早锻炼系统接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sso.html">5. 单点登录</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">6. 异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">7. Changelog</a></li>
+</ul>
+<p class="caption"><span class="caption-text">使用示例</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="zhengfang_example.html">1. 教务处接口示例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="card_example.html">2. 一卡通接口示例</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NJUPT-API</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>2. 一卡通接口</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>2. 一卡通接口<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<dl class="class">
+<dt id="njupt.Card">
+<em class="property">class </em><code class="descclassname">njupt.</code><code class="descname">Card</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card" title="永久链接至目标">¶</a></dt>
+<dd><p>一卡通相关接口</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<em>str</em>) – 一卡通卡号</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – 一卡通查询密码</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#njupt.exceptions.AuthenticationException" title="njupt.exceptions.AuthenticationException"><code class="xref py py-class docutils literal notranslate"><span class="pre">njupt.exceptions.AuthenticationException</span></code></a></p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span> <span class="o">=</span> <span class="n">Card</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;110201500111111&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;sssss&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="njupt.Card.get_balance">
+<code class="descname">get_balance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.get_balance" title="永久链接至目标">¶</a></dt>
+<dd><p>查询余额</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回</dt>
+<dd class="field-odd"><p>包含 过度余额、到账余额、总余额的dict</p>
+</dd>
+<dt class="field-even">返回类型</dt>
+<dd class="field-even"><p>dict of (str, float)</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">get_balance</span><span class="p">()</span>
+<span class="go">{&#39;balance&#39;: 10.01, &#39;unsettle_balance&#39;: 0.01, &#39;total&#39;: 10.02}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.get_bill">
+<code class="descname">get_bill</code><span class="sig-paren">(</span><em>start_date='2019-10-03'</em>, <em>end_date='2019-11-02'</em>, <em>rows=100</em>, <em>page=1</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.get_bill" title="永久链接至目标">¶</a></dt>
+<dd><p>查询一卡通消费记录，默认为最近一个月的消费记录</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_date</strong> – 如 “2017-12-27”</p></li>
+<li><p><strong>end_date</strong> – 如 “2018-01-26”</p></li>
+<li><p><strong>rows</strong> – 一次查询返回的最大记录数量,默认为100条记录</p></li>
+<li><p><strong>page</strong> – 如果结果数量有多页，决定返回第几页。</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>查询到的信息，格式见例子</p>
+</dd>
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">get_bill</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">    &#39;recodes&#39;:</span>
+<span class="go">        [</span>
+<span class="go">            {</span>
+<span class="go">                &#39;balance&#39;: 39.71,</span>
+<span class="go">                &#39;change&#39;: -5,</span>
+<span class="go">                &#39;comment&#39;: &#39;未知系统,交电费&#39;,</span>
+<span class="go">                &#39;department&#39;: &#39;仙林售电处&#39;,</span>
+<span class="go">                &#39;time&#39;: &#39;2018-01-26 20:55:40&#39;,</span>
+<span class="go">                &#39;type&#39;: &#39;代扣代缴&#39;,</span>
+<span class="go">                &#39;week&#39;: &#39;星期五&#39;</span>
+<span class="go">            },</span>
+<span class="go">            ...</span>
+<span class="go">        ],</span>
+<span class="go">    &#39;total&#39;: 52</span>
+<span class="go">    &#39;total_pages&#39;: 2</span>
+<span class="go">    &#39;page&#39;: 1</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.get_net_balance">
+<code class="descname">get_net_balance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.get_net_balance" title="永久链接至目标">¶</a></dt>
+<dd><p>获取Dr.com的上网费用余额</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回</dt>
+<dd class="field-odd"><p>dr.com的余额</p>
+</dd>
+<dt class="field-even">返回类型</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">get_net_balance</span><span class="p">()</span>
+<span class="go">2.33</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.recharge">
+<code class="descname">recharge</code><span class="sig-paren">(</span><em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.recharge" title="永久链接至目标">¶</a></dt>
+<dd><p>从绑定的银行卡中扣款充值余额</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><p><strong>amount</strong> (<em>float</em><em> or </em><em>int</em>) – 充值金额, 单位为元</p>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>充值结果</p>
+</dd>
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">recharge</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">{&#39;success&#39;: True, &#39;code&#39;: 0, &#39;msg&#39;: &#39;转账成功&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.recharge_net">
+<code class="descname">recharge_net</code><span class="sig-paren">(</span><em>amount</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.recharge_net" title="永久链接至目标">¶</a></dt>
+<dd><p>充值网费（一卡通余额 ==&gt; 城市热点）</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><p><strong>amount</strong> (<em>float</em><em> or </em><em>int</em>) – 充值金额, 单位为元</p>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>充值结果</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">recharge_net</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+<span class="go">{&#39;success&#39;: True, &#39;code&#39; : 0, &#39;Msg&#39; : &#39;充值成功&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.recharge_sanpailou_elec">
+<code class="descname">recharge_sanpailou_elec</code><span class="sig-paren">(</span><em>amount</em>, <em>building_name</em>, <em>room_id</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.recharge_sanpailou_elec" title="永久链接至目标">¶</a></dt>
+<dd><p>充值三牌楼校区的寝室电费，参数参考仙林校区（未测试</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Card.recharge_xianlin_elec">
+<code class="descname">recharge_xianlin_elec</code><span class="sig-paren">(</span><em>amount</em>, <em>building_name</em>, <em>big_room_id</em>, <em>small_room_id=0</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Card.recharge_xianlin_elec" title="永久链接至目标">¶</a></dt>
+<dd><p>充值仙林校区的寝室电费</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>amount</strong> (<em>float</em>) – 充值金额</p></li>
+<li><p><strong>building_name</strong> (<em>str</em>) – 楼栋名称，例如 “兰苑11栋”</p></li>
+<li><p><strong>big_room_id</strong> (<em>int</em><em> or </em><em>str</em>) – 大寝寝室号</p></li>
+<li><p><strong>small_room_id</strong> (<em>int</em><em> or </em><em>str</em>) – 小寝寝室号， 不传或传0则表示充值为大寝电费， 1、2、3则充值对应小寝空调电费</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>充值结果</p>
+</dd>
+<dt class="field-odd">Raise</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#njupt.exceptions.NjuptException" title="njupt.exceptions.NjuptException"><code class="xref py py-class docutils literal notranslate"><span class="pre">njupt.exceptions.NjuptException</span></code></a> 楼栋名称不正确</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">card</span><span class="o">.</span><span class="n">recharge_xianlin_elec</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">amount</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">building_name</span><span class="o">=</span><span class="s1">&#39;兰苑11栋&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">big_room_id</span><span class="o">=</span><span class="mi">403</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">small_room_id</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="go">{&#39;code&#39;: 0, &#39;msg&#39;: &#39;缴费成功！&#39;, &#39;success&#39;: True}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="library.html" class="btn btn-neutral float-right" title="3. 图书馆接口" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="zhengfang.html" class="btn btn-neutral float-left" title="1. 教务处接口" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, gaoliang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

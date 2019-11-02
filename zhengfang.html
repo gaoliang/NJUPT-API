@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. 教务处接口 &mdash; NJUPT-API  文档</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="2. 一卡通接口" href="card.html" />
+    <link rel="prev" title="NJUPT-API 使用文档" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> NJUPT-API
+          
+
+          
+            
+            <img src="_static/logo_tiny.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">接口文档</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. 教务处接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="card.html">2. 一卡通接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="library.html">3. 图书馆接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runningman.html">4. 早锻炼系统接口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sso.html">5. 单点登录</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">6. 异常</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">7. Changelog</a></li>
+</ul>
+<p class="caption"><span class="caption-text">使用示例</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="zhengfang_example.html">1. 教务处接口示例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="card_example.html">2. 一卡通接口示例</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NJUPT-API</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>1. 教务处接口</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>1. 教务处接口<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<dl class="class">
+<dt id="njupt.Zhengfang">
+<em class="property">class </em><code class="descclassname">njupt.</code><code class="descname">Zhengfang</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em>, <em>sso_session=None</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang" title="永久链接至目标">¶</a></dt>
+<dd><p>南邮正方教务, sso登录方式参见 <a class="reference internal" href="sso.html#njupt.SSO" title="njupt.SSO"><code class="xref py py-class docutils literal notranslate"><span class="pre">njupt.SSO</span></code></a> 单点登录</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># 👍 推荐使用sso登录来获取正方实例，速度更快</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">njupt</span> <span class="k">import</span> <span class="n">SSO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sso</span> <span class="o">=</span> <span class="n">SSO</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;B12345678&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;abcdefgh&#39;</span><span class="p">)</span> <span class="c1"># 账号密码为my.njupt.edu.cn账号密码</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span> <span class="o">=</span> <span class="n">sso</span><span class="o">.</span><span class="n">zhengfang</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># 😐 传统的正方账号密码方式, 速度慢</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">njupt</span> <span class="k">import</span> <span class="n">Zhengfang</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span> <span class="o">=</span> <span class="n">Zhengfang</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;B12345678&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;abcdefgh&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="njupt.Zhengfang.get_course_info">
+<code class="descname">get_course_info</code><span class="sig-paren">(</span><em>courser_code</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_course_info" title="永久链接至目标">¶</a></dt>
+<dd><p>获取课程的简介信息</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><p><strong>courser_code</strong> – 课程代码</p>
+</dd>
+<dt class="field-even">返回类型</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_courses">
+<code class="descname">get_courses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_courses" title="永久链接至目标">¶</a></dt>
+<dd><p>获取这学期的选课情况</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回</dt>
+<dd class="field-odd"><p>格式参看例子，期中interval为1则为单周，2则为双周。 这些信息足够生成课表了</p>
+</dd>
+<dt class="field-even">返回类型</dt>
+<dd class="field-even"><p>list of dict</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">get_courses</span><span class="p">()</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;class_start&#39;: 8,</span>
+<span class="go">        &#39;class_end&#39;: 9,</span>
+<span class="go">        &#39;day&#39;: 1,</span>
+<span class="go">        &#39;name&#39;: &#39;市场营销&#39;,</span>
+<span class="go">        &#39;room&#39;: &#39;教4－101&#39;,</span>
+<span class="go">        &#39;teacher&#39;: &#39;王波(男)&#39;,</span>
+<span class="go">        &#39;week&#39;: &#39;第1-15周|单周&#39;,</span>
+<span class="go">        &#39;interval&#39;: 2,</span>
+<span class="go">        &#39;week_end&#39;: 15,</span>
+<span class="go">        &#39;week_start&#39;: 1</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_gpa">
+<code class="descname">get_gpa</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_gpa" title="永久链接至目标">¶</a></dt>
+<dd><p>获取GPA</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">get_gpa</span><span class="p">()</span>
+<span class="go">5.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_gpa_under_pku">
+<code class="descname">get_gpa_under_pku</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_gpa_under_pku" title="永久链接至目标">¶</a></dt>
+<dd><p>获取按照北大GPA算法计算的绩点</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回</dt>
+<dd class="field-odd"><p>北大算法绩点，注意是计算了任选课和重修课的成绩</p>
+</dd>
+</dl>
+<p>&gt;&gt;&gt;zf.get_gpa_under_pku()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_gpa_under_zju">
+<code class="descname">get_gpa_under_zju</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_gpa_under_zju" title="永久链接至目标">¶</a></dt>
+<dd><p>获取按照浙大GPA算法计算的绩点</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回</dt>
+<dd class="field-odd"><p>浙大算法绩点，注意是计算了任选课和重修课的成绩</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">get_gpa_under_zju</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.get_schedule">
+<code class="descname">get_schedule</code><span class="sig-paren">(</span><em>week</em>, <em>year=None</em>, <em>semester=None</em><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.get_schedule" title="永久链接至目标">¶</a></dt>
+<dd><p>获取指定学期指定周的课表（不传入年份和学期则默认当前学期), 不推荐使用</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>year</strong> – 学年 格式为 “2017-2018”</p></li>
+<li><p><strong>semester</strong> – 学期 数字1或2</p></li>
+<li><p><strong>week</strong> – 周次 数字 1-20</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>二维列表schedule，schedule[i][j]代表周i第j节课的课程。 为了方便，i或j为零0的单元均不使用。
+列表的元素为None，代表没有课程，或描述课程信息的dict</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">get_schedule</span><span class="p">(</span><span class="n">week</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="s1">&#39;2017-2018&#39;</span><span class="p">,</span> <span class="n">semester</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;classroom&#39;: &#39;教4－202&#39;,</span>
+<span class="go">        &#39;name&#39;: &#39;技术经济学&#39;,</span>
+<span class="go">        &#39;teacher&#39;: &#39;储成祥&#39;</span>
+<span class="go">    }</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.list_exam_grades">
+<code class="descname">list_exam_grades</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.list_exam_grades" title="永久链接至目标">¶</a></dt>
+<dd><p>获取等级考试成绩信息</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>列表，内容为每次等级考试的信息</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">list_exam_grades</span><span class="p">()</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;学年&#39;: &#39;2015-2016&#39;,</span>
+<span class="go">        &#39;学期&#39;: 1,</span>
+<span class="go">        &#39;等级考试名称&#39;: &#39;全国大学英语四级考试&#39;,</span>
+<span class="go">        &#39;准考证号&#39;: &#39;320082152113313&#39;,</span>
+<span class="go">        &#39;考试日期&#39;: datetime.datetime(2015, 12, 19, 0, 0),</span>
+<span class="go">        &#39;成绩&#39;: &#39;710&#39;</span>
+<span class="go">        &#39;写作成绩&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;综合成绩&#39;: &#39;&#39;</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.list_exam_scores">
+<code class="descname">list_exam_scores</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.list_exam_scores" title="永久链接至目标">¶</a></dt>
+<dd><p>获取参加过的考试的成绩列表</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>返回一个包含考试成绩信息字典的列表, 注意是所有参加过的考试</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zf</span><span class="o">.</span><span class="n">list_exam_scores</span><span class="p">()</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;备注&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;学分&#39;: 3.0,</span>
+<span class="go">        &#39;学年&#39;: &#39;2016-2017&#39;,</span>
+<span class="go">        &#39;学期&#39;: 1,</span>
+<span class="go">        &#39;学院名称&#39;: &#39;电子科学与工程学院&#39;,</span>
+<span class="go">        &#39;成绩&#39;: 90.0,</span>
+<span class="go">        &#39;绩点&#39;: 4.0,</span>
+<span class="go">        &#39;补考成绩&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;课程代码&#39;: &#39;B0400111S&#39;,</span>
+<span class="go">        &#39;课程名称&#39;: &#39;模拟电子线路C&#39;,</span>
+<span class="go">        &#39;课程归属&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;课程性质&#39;: &#39;必修&#39;,</span>
+<span class="go">        &#39;课程英文名称&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;辅修标记&#39;: &#39;0&#39;,</span>
+<span class="go">        &#39;重修成绩&#39;: &#39;&#39;,</span>
+<span class="go">        &#39;重修标记&#39;: &#39;0&#39;</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="njupt.Zhengfang.list_optional_courses">
+<code class="descname">list_optional_courses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#njupt.Zhengfang.list_optional_courses" title="永久链接至目标">¶</a></dt>
+<dd><p>获取可选课程列表，对应于教务系统 -&gt; 网上选课 -&gt; 学生选课</p>
+<dl class="field-list simple">
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>可选课程信息列表</p>
+</dd>
+<dt class="field-odd">Raise</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#njupt.exceptions.TemporaryBannedException" title="njupt.exceptions.TemporaryBannedException"><code class="xref py py-class docutils literal notranslate"><span class="pre">njupt.exceptions.TemporaryBannedException</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="card.html" class="btn btn-neutral float-right" title="2. 一卡通接口" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="NJUPT-API 使用文档" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, gaoliang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

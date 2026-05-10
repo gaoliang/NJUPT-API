@@ -1,0 +1,19 @@
+name: CI
+
+"on":
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.6"
+      - run: pip install pipenv
+      - run: pipenv install --dev
+      - run: travis-sphinx build -s docs
+      - run: travis-sphinx deploy -b master -c njupt-api.save1s.com
